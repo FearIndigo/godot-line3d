@@ -1,6 +1,8 @@
-[gd_scene load_steps=8 format=3 uid="uid://c6h07n1t7pro0"]
+[gd_scene load_steps=10 format=3 uid="uid://c6h07n1t7pro0"]
 
+[ext_resource type="Script" path="res://Demo.cs" id="1_ddkfi"]
 [ext_resource type="Script" path="res://addons/godot_line3d/Line3D.cs" id="1_hb5dm"]
+[ext_resource type="Script" path="res://Rotate.cs" id="2_d64pp"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_n3w80"]
 
@@ -17,8 +19,7 @@ size = Vector2(5, 5)
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_q43ww"]
 albedo_color = Color(0.419205, 0.350775, 0.261095, 1)
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_f7iku"]
-backlight = Color(0.509286, 0.509286, 0.509286, 1)
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_e1ht3"]
 
 [node name="Demo" type="Node3D"]
 
@@ -30,7 +31,11 @@ transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0, 
 shadow_enabled = true
 directional_shadow_max_distance = 20.0
 
-[node name="Camera3D" type="Camera3D" parent="."]
+[node name="CameraRig" type="Node3D" parent="."]
+script = ExtResource("2_d64pp")
+_degPerSecond = 20.0
+
+[node name="Camera3D" type="Camera3D" parent="CameraRig"]
 transform = Transform3D(1, 0, 0, 0, 0.707107, 0.707107, 0, -0.707107, 0.707107, 0, 2, 2)
 
 [node name="Ground" type="MeshInstance3D" parent="."]
@@ -38,7 +43,11 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.1, 0)
 mesh = SubResource("PlaneMesh_ajeax")
 surface_material_override/0 = SubResource("StandardMaterial3D_q43ww")
 
-[node name="Line3D" type="Node3D" parent="."]
+[node name="DemoMover" type="Node3D" parent="." node_paths=PackedStringArray("_line3D")]
+script = ExtResource("1_ddkfi")
+_line3D = NodePath("Line3D")
+
+[node name="Line3D" type="Node3D" parent="DemoMover"]
 script = ExtResource("1_hb5dm")
-Points = [Vector3(1.285, 0, -0.275), Vector3(0, 0, -0.085), Vector3(-0.375, 0, 0.88), Vector3(-0.935, 0, 0.87)]
-MaterialOverride = SubResource("StandardMaterial3D_f7iku")
+NormalTarget = Vector3(0.528157, 0.910504, -0.917616)
+MaterialOverride = SubResource("StandardMaterial3D_e1ht3")

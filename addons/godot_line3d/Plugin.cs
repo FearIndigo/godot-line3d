@@ -1,7 +1,7 @@
 #if TOOLS
 using Godot;
 
-namespace FearIndigo.Line3D;
+namespace FearIndigo.GodotLine3D;
 
 [Tool]
 public partial class Plugin : EditorPlugin

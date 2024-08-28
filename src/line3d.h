@@ -1,12 +1,12 @@
 #ifndef LINE3D_H
 #define LINE3D_H
 
-#include <godot_cpp/classes/geometry_instance3d.hpp>
+#include <godot_cpp/classes/mesh_instance3d.hpp>
 
 namespace godot {
 
-class Line3D : public GeometryInstance3D {
-	GDCLASS(Line3D, GeometryInstance3D)
+class Line3D : public MeshInstance3D {
+	GDCLASS(Line3D, MeshInstance3D)
 
 private:
 
@@ -17,7 +17,7 @@ public:
 	Line3D();
 	~Line3D();
 
-	void _process(double delta) override;
+  void _process(double delta) override;
 };
 
 }

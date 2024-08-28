@@ -18,14 +18,14 @@ sources = Glob("src/*.cpp")
 
 if env["platform"] == "macos":
     library = env.SharedLibrary(
-        "line3d-demo/bin/line3d.{}.{}.framework/line3d.{}.{}".format(
+        "line3d-demo/addons/line3d/bin/line3d.{}.{}.framework/line3d.{}.{}".format(
             env["platform"], env["target"], env["platform"], env["target"]
         ),
         source=sources,
     )
 else:
     library = env.SharedLibrary(
-        "line3d-demo/bin/line3d{}{}".format(env["suffix"], env["SHLIBSUFFIX"]),
+        "line3d-demo/addons/line3d/bin/line3d{}{}".format(env["suffix"], env["SHLIBSUFFIX"]),
         source=sources,
     )
 

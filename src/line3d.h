@@ -1,15 +1,14 @@
 #ifndef LINE3D_H
 #define LINE3D_H
 
-#include <godot_cpp/classes/mesh_instance3d.hpp>
+#include <godot_cpp/classes/geometry_instance3d.hpp>
 
 namespace godot {
 
-class Line3D : public MeshInstance3D {
-	GDCLASS(Line3D, MeshInstance3D)
+class Line3D : public GeometryInstance3D {
+	GDCLASS(Line3D, GeometryInstance3D)
 
 private:
-	double time_passed;
 
 protected:
 	static void _bind_methods();
@@ -23,4 +22,4 @@ public:
 
 }
 
-#endif
+#endif // LINE3D_H

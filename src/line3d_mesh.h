@@ -19,7 +19,7 @@ public:
 	Line3DMesh();
 	~Line3DMesh();
 
-	// m_points methods
+	// methods to manipulate values in m_points
 	void add_point(const Vector3 &p_position, int64_t p_index = -1);
 	void clear_points();
 	Vector3 get_point_position(int64_t p_index) const;

@@ -2,7 +2,6 @@
 #define LINE3D_H
 
 #include <godot_cpp/classes/geometry_instance3d.hpp>
-#include <godot_cpp/classes/ref.hpp>
 
 #include "line3d_mesh.h"
 

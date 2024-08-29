@@ -2,7 +2,6 @@
 #define LINE3D_MESH_H
 
 #include <godot_cpp/classes/immediate_mesh.hpp>
-#include <godot_cpp/variant/packed_vector3_array.hpp>
 
 namespace godot {
 

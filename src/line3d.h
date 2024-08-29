@@ -30,7 +30,6 @@ public:
 	void set_point_position(int64_t p_index, const Vector3 &p_position);
 	void set_points(const PackedVector3Array &p_points);
 
-
   void _process(double delta) override;
 };
 

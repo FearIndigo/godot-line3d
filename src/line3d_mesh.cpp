@@ -8,6 +8,10 @@ void Line3DMesh::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("set_points", "p_points"), &Line3DMesh::set_points);
 	ClassDB::bind_method(D_METHOD("get_points"), &Line3DMesh::get_points);
 	ADD_PROPERTY(PropertyInfo(Variant::PACKED_VECTOR3_ARRAY, "points"), "set_points", "get_points");
+
+	ClassDB::bind_method(D_METHOD("set_closed", "p_closed"), &Line3DMesh::set_closed);
+	ClassDB::bind_method(D_METHOD("get_closed"), &Line3DMesh::get_closed);
+	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "closed"), "set_closed", "get_closed");
 }
 
 Line3DMesh::Line3DMesh() {
@@ -18,7 +22,9 @@ Line3DMesh::~Line3DMesh() {
 	// Add your cleanup here.
 }
 
-void Line3DMesh::add_point(const Vector3 &p_position, int64_t p_index = -1) {
+#pragma region m_points
+
+void Line3DMesh::add_point(const Vector3 &p_position, int64_t p_index) {
 	if(p_index == -1) p_index = m_points.size();
 	m_points.insert(p_index, p_position);
 }
@@ -47,11 +53,45 @@ void Line3DMesh::set_points(const PackedVector3Array &p_points) {
 	m_points = p_points;
 }
 
+#pragma endregion
+
+#pragma region m_closed
+
+bool Line3DMesh::get_closed() const {
+	return m_closed;
+}
+
+void Line3DMesh::set_closed(bool p_closed) {
+	m_closed = p_closed;
+}
+
+#pragma endregion
+
+#pragma region helper_methods
+
+double Line3DMesh::_get_line_length() const {
+	double length = 0.0;
+	int64_t size = m_points.size();
+	for (int i = 0; i < _get_num_segments(); i++) {
+		length += m_points[i].distance_to(m_points[(i + 1) % size]);
+	}
+	return length;
+}
+
+int64_t Line3DMesh::_get_num_segments() const {
+	int64_t size = m_points.size();
+	return (m_closed && size > 2) ? size : size - 1;
+}
+
+#pragma endregion
+
 void Line3DMesh::redraw() {
 	// Clear mesh.
 	clear_surfaces();
 
-	if(m_points.is_empty()) return;
+	// Return if no segments to draw.
+	int64_t num_segments = _get_num_segments();
+	if(num_segments <= 0) return;
 
 	// Begin draw.
 	surface_begin(PRIMITIVE_TRIANGLES);

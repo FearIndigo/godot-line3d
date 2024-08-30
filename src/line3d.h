@@ -21,7 +21,6 @@ public:
 	Line3D();
 	~Line3D();
 
-	// methods to manipulate points on m_mesh
 	void add_point(const Vector3 &p_position, int64_t p_index = -1);
 	void clear_points();
 	Vector3 get_point_position(int64_t p_index) const;
@@ -29,6 +28,9 @@ public:
 	void remove_point(int64_t p_index);
 	void set_point_position(int64_t p_index, const Vector3 &p_position);
 	void set_points(const PackedVector3Array &p_points);
+
+	bool get_closed() const;
+	void set_closed(bool p_closed);
 
   void _process(double delta) override;
 };

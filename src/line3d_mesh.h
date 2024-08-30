@@ -10,15 +10,17 @@ class Line3DMesh : public ImmediateMesh {
 
 private:
 	PackedVector3Array m_points;
+	bool m_closed = false;
 
 protected:
 	static void _bind_methods();
+	double _get_line_length() const;
+	int64_t _get_num_segments() const;
 
 public:
 	Line3DMesh();
 	~Line3DMesh();
 
-	// methods to manipulate values in m_points
 	void add_point(const Vector3 &p_position, int64_t p_index = -1);
 	void clear_points();
 	Vector3 get_point_position(int64_t p_index) const;
@@ -26,6 +28,9 @@ public:
 	void remove_point(int64_t p_index);
 	void set_point_position(int64_t p_index, const Vector3 &p_position);
 	void set_points(const PackedVector3Array &p_points);
+
+	bool get_closed() const;
+	void set_closed(bool p_closed);
 
 	void redraw();
 };

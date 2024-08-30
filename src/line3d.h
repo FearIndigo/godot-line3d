@@ -15,11 +15,13 @@ private:
 
 protected:
 	static void _bind_methods();
-	bool _is_dirty;
+	bool _is_dirty = false;
 
 public:
 	Line3D();
 	~Line3D();
+
+	Ref<Line3DMesh> get_mesh() const;
 
 	void add_point(const Vector3 &p_position, int64_t p_index = -1);
 	void clear_points();

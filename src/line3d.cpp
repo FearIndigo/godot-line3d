@@ -24,6 +24,14 @@ Line3D::~Line3D() {
 	// Add your cleanup here.
 }
 
+#pragma region m_mesh
+
+Ref<Line3DMesh> Line3D::get_mesh() const {
+	return m_mesh;
+}
+
+#pragma endregion
+
 #pragma region m_points
 
 void Line3D::add_point(const Vector3 &p_position, int64_t p_index) {

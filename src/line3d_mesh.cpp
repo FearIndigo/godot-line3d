@@ -17,6 +17,8 @@ void Line3DMesh::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("set_closed", "closed"), &Line3DMesh::set_closed);
 	ClassDB::bind_method(D_METHOD("get_closed"), &Line3DMesh::get_closed);
 	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "closed"), "set_closed", "get_closed");
+
+	ClassDB::bind_method(D_METHOD("redraw"), &Line3DMesh::redraw);
 }
 
 Line3DMesh::Line3DMesh() {

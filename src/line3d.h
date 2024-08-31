@@ -12,10 +12,11 @@ class Line3D : public GeometryInstance3D {
 
 private:
 	Ref<Line3DMesh> m_mesh;
+	bool m_is_dirty = false;
 
 protected:
 	static void _bind_methods();
-	bool _is_dirty = false;
+	void _notification(int p_what);
 
 public:
 	Line3D();
@@ -33,8 +34,6 @@ public:
 
 	bool get_closed() const;
 	void set_closed(bool p_closed);
-
-  void _process(double delta) override;
 };
 
 }

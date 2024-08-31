@@ -43,12 +43,12 @@ Ref<Line3DMesh> Line3D::get_mesh() const {
 
 void Line3D::add_point(const Vector3 &p_position, int64_t p_index) {
 	m_mesh->add_point(p_position, p_index);
-	_is_dirty = true;
+	m_is_dirty = true;
 }
 
 void Line3D::clear_points() {
 	m_mesh->clear_points();
-	_is_dirty = true;
+	m_is_dirty = true;
 }
 
 Vector3 Line3D::get_point_position(int64_t p_index) const {
@@ -61,17 +61,17 @@ PackedVector3Array Line3D::get_points() const {
 
 void Line3D::remove_point(int64_t p_index) {
 	m_mesh->remove_point(p_index);
-	_is_dirty = true;
+	m_is_dirty = true;
 }
 
 void Line3D::set_point_position(int64_t p_index, const Vector3 &p_position) {
 	m_mesh->set_point_position(p_index, p_position);
-	_is_dirty = true;
+	m_is_dirty = true;
 }
 
 void Line3D::set_points(const PackedVector3Array &p_points) {
 	m_mesh->set_points(p_points);
-	_is_dirty = true;
+	m_is_dirty = true;
 }
 
 #pragma endregion
@@ -84,13 +84,15 @@ bool Line3D::get_closed() const {
 
 void Line3D::set_closed(bool p_closed) {
 	m_mesh->set_closed(p_closed);
-	_is_dirty = true;
+	m_is_dirty = true;
 }
 
 #pragma endregion
 
-void Line3D::_process(double delta) {
-  if(!_is_dirty) return;
-	m_mesh->redraw();
-	_is_dirty = false;
+void Line3D::_notification(int p_what) {
+	if(p_what == NOTIFICATION_PROCESS) {
+		if(!m_is_dirty) return;
+		m_mesh->redraw();
+		m_is_dirty = false;
+	}
 }

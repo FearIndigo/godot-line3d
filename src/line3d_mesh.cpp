@@ -5,11 +5,16 @@
 using namespace godot;
 
 void Line3DMesh::_bind_methods() {
-	ClassDB::bind_method(D_METHOD("set_points", "p_points"), &Line3DMesh::set_points);
+	ClassDB::bind_method(D_METHOD("add_point", "position", "index"), &Line3DMesh::add_point, DEFVAL(-1));
+	ClassDB::bind_method(D_METHOD("clear_points"), &Line3DMesh::clear_points);
+	ClassDB::bind_method(D_METHOD("get_point_position", "index"), &Line3DMesh::get_point_position);
 	ClassDB::bind_method(D_METHOD("get_points"), &Line3DMesh::get_points);
+	ClassDB::bind_method(D_METHOD("remove_point", "index"), &Line3DMesh::remove_point);
+	ClassDB::bind_method(D_METHOD("set_point_position", "index", "position"), &Line3DMesh::set_point_position);
+	ClassDB::bind_method(D_METHOD("set_points", "points"), &Line3DMesh::set_points);
 	ADD_PROPERTY(PropertyInfo(Variant::PACKED_VECTOR3_ARRAY, "points"), "set_points", "get_points");
 
-	ClassDB::bind_method(D_METHOD("set_closed", "p_closed"), &Line3DMesh::set_closed);
+	ClassDB::bind_method(D_METHOD("set_closed", "closed"), &Line3DMesh::set_closed);
 	ClassDB::bind_method(D_METHOD("get_closed"), &Line3DMesh::get_closed);
 	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "closed"), "set_closed", "get_closed");
 }

@@ -60,6 +60,12 @@ public:
 
 	Vector3 get_normal() const;
 	void set_normal(const Vector3 &p_normal);
+
+	bool get_use_global_space() const;
+	void set_use_global_space(bool p_use_global_space);
+
+	Transform3D get_mesh_transform() const;
+	void set_mesh_transform(const Transform3D &p_transform);
 };
 
 } // namespace godot

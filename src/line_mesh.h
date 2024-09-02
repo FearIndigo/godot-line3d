@@ -17,7 +17,7 @@ public:
 	};
 
 private:
-	PackedVector3Array m_points;
+	PackedVector3Array m_points = {Vector3(0, 0, 0), Vector3(0, 1, 0)};
 	bool m_closed = false;
 	double m_width = 1.0;
 	Ref<Curve> m_width_curve;
@@ -25,11 +25,16 @@ private:
 	Ref<Gradient> m_gradient;
 	LineMesh::LineAlignment m_alignment = ALIGN_TO_NORMAL;
 	Vector3 m_normal = Vector3(0, 0, 1);
+	bool m_use_transform = false;
+	Transform3D m_transform;
+	Transform3D m_inverse_transform;
 
 protected:
 	static void _bind_methods();
 
-	Vector3 _get_position_normal(const Vector3 &p_local_position) const;
+	Vector3 _transform_position(const Vector3 &p_local_position) const;
+	Vector3 _transform_direction(const Vector3 &p_local_direction) const;
+	Vector3 _get_position_normal(const Vector3 &p_position) const;
 
 public:
 	LineMesh();
@@ -63,6 +68,12 @@ public:
 
 	Vector3 get_normal() const;
 	void set_normal(const Vector3 &p_normal);
+
+	bool get_use_transform() const;
+	void set_use_transform(bool p_use_transform);
+
+	Transform3D get_transform() const;
+	void set_transform(const Transform3D &p_transform);
 
 	void redraw();
 };

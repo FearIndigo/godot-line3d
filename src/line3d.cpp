@@ -49,6 +49,10 @@ void Line3D::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("set_normal", "normal"), &Line3D::set_normal);
 	ClassDB::bind_method(D_METHOD("get_normal"), &Line3D::get_normal);
 	ADD_PROPERTY(PropertyInfo(Variant::VECTOR3, "normal"), "set_normal", "get_normal");
+
+	ClassDB::bind_method(D_METHOD("set_use_global_space", "use_global_space"), &Line3D::set_use_global_space);
+	ClassDB::bind_method(D_METHOD("get_use_global_space"), &Line3D::get_use_global_space);
+	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "use_global_space"), "set_use_global_space", "get_use_global_space");
 }
 
 Line3D::Line3D() {
@@ -204,18 +208,54 @@ void Line3D::set_normal(const Vector3 &p_normal) {
 
 #pragma endregion
 
+#pragma region m_use_global_space
+
+bool Line3D::get_use_global_space() const {
+	return m_mesh->get_use_transform();
+}
+
+void Line3D::set_use_global_space(bool p_use_global_space) {
+	m_mesh->set_use_transform(p_use_global_space);
+	m_is_dirty = true;
+}
+
+#pragma endregion
+
+#pragma region m_transform
+
+Transform3D Line3D::get_mesh_transform() const {
+	return m_mesh->get_transform();
+}
+
+void Line3D::set_mesh_transform(const Transform3D &p_transform) {
+	m_mesh->set_transform(p_transform);
+	m_is_dirty = true;
+}
+
+#pragma endregion
+
 void Line3D::_notification(int p_what) {
 	if(p_what == NOTIFICATION_PROCESS) {
+		// Update transform
+		bool use_global_space = get_use_global_space();
+		if(use_global_space) {
+			Transform3D global_transform = get_global_transform();
+			if(global_transform != get_mesh_transform()) {
+				set_mesh_transform(global_transform);
+			}
+		}
+
 		// Update view alignment.
 		if(m_alignment == ALIGN_TO_VIEW) {
 			Camera3D *camera = get_viewport()->get_camera_3d();
 			if(camera != nullptr) {
-				Vector3 relative_camera_position = to_local(camera->get_global_position());
-				if(!relative_camera_position.is_equal_approx(get_normal())) {
-					set_normal(relative_camera_position);
+				Vector3 camera_position = use_global_space ? camera->get_global_position() : to_local(camera->get_global_position());
+				if(!camera_position.is_equal_approx(get_normal())) {
+					set_normal(camera_position);
 				}
 			}
 		}
+
 		// Redraw mesh if dirty.
 		if(!m_is_dirty) return;
 		m_mesh->redraw();

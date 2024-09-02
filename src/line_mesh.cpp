@@ -45,11 +45,18 @@ void LineMesh::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("get_normal"), &LineMesh::get_normal);
 	ADD_PROPERTY(PropertyInfo(Variant::VECTOR3, "normal"), "set_normal", "get_normal");
 
+	ClassDB::bind_method(D_METHOD("set_use_transform", "use_transform"), &LineMesh::set_use_transform);
+	ClassDB::bind_method(D_METHOD("get_use_transform"), &LineMesh::get_use_transform);
+
+	ClassDB::bind_method(D_METHOD("set_transform", "transform"), &LineMesh::set_transform);
+	ClassDB::bind_method(D_METHOD("get_transform"), &LineMesh::get_transform);
+
 	ClassDB::bind_method(D_METHOD("redraw"), &LineMesh::redraw);
 }
 
 LineMesh::LineMesh() {
 	// Initialize any variables here.
+	redraw();
 }
 
 LineMesh::~LineMesh() {
@@ -172,11 +179,44 @@ void LineMesh::set_normal(const Vector3 &p_normal) {
 
 #pragma endregion
 
+#pragma region m_use_transform
+
+bool LineMesh::get_use_transform() const {
+	return m_use_transform;
+}
+
+void LineMesh::set_use_transform(bool p_use_transform) {
+	m_use_transform = p_use_transform;
+}
+
+#pragma endregion
+
+#pragma region m_transform
+
+Transform3D LineMesh::get_transform() const {
+	return m_transform;
+}
+
+void LineMesh::set_transform(const Transform3D &p_transform) {
+	m_transform = p_transform;
+	m_inverse_transform = m_transform.inverse();
+}
+
+#pragma endregion
+
 #pragma region helper_methods
 
-Vector3 LineMesh::_get_position_normal(const Vector3 &p_local_position) const {
-	if(m_alignment == ALIGN_TO_NORMAL) return m_normal;
-	return p_local_position.direction_to(m_normal);
+Vector3 LineMesh::_transform_position(const Vector3 &p_local_position) const {
+	return m_use_transform ? m_inverse_transform.xform(p_local_position) : p_local_position;
+}
+
+Vector3 LineMesh::_transform_direction(const Vector3 &p_local_direction) const {
+	return m_use_transform ? m_inverse_transform.basis.xform(p_local_direction) : p_local_direction;
+}
+
+Vector3 LineMesh::_get_position_normal(const Vector3 &p_position) const {
+	if(m_alignment == ALIGN_TO_NORMAL) return _transform_direction(m_normal);
+	return p_position.direction_to(_transform_position(m_normal));
 }
 
 #pragma endregion
@@ -195,20 +235,25 @@ void LineMesh::redraw() {
 	// Begin draw.
 	surface_begin(PRIMITIVE_TRIANGLES);
 
-	surface_set_normal(_get_position_normal(Vector3(-1, -1, 0)));
+	Vector3 position;
+
+	position = _transform_position(Vector3(-1, -1, 0));
+	surface_set_normal(_get_position_normal(position));
 	surface_set_uv(Vector2(0, 0));
 	surface_set_color(m_color);
-	surface_add_vertex(Vector3(-1, -1, 0));
+	surface_add_vertex(position);
 
-	surface_set_normal(_get_position_normal(Vector3(-1, 1, 0)));
+	position = _transform_position(Vector3(-1, 1, 0));
+	surface_set_normal(_get_position_normal(position));
 	surface_set_uv(Vector2(0, 1));
 	surface_set_color(m_color);
-	surface_add_vertex(Vector3(-1, 1, 0));
+	surface_add_vertex(position);
 
-	surface_set_normal(_get_position_normal(Vector3(1, 1, 0)));
+	position = _transform_position(Vector3(1, 1, 0));
+	surface_set_normal(_get_position_normal(position));
 	surface_set_uv(Vector2(1, 1));
 	surface_set_color(m_color);
-	surface_add_vertex(Vector3(1, 1, 0));
+	surface_add_vertex(position);
 
 	// End drawing.
 	surface_end();

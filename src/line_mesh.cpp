@@ -128,8 +128,8 @@ void LineMesh::redraw() {
 	// Clear mesh.
 	clear_surfaces();
 
-	// Return if line has no width. If there is a width curve, assume it has some thickness.
-	if(m_width <= 0.0 && m_width_curve.is_null()) return;
+	// Return if line has no width.
+	if(m_width <= 0.0) return;
 
 	// Return if no segments to draw.
 	int64_t num_segments = _get_num_segments();

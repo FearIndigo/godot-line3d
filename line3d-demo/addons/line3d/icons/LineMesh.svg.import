@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://c208ab8bhqnpb"
-path="res://.godot/imported/Line3DMesh.svg-fda1899891eea84c005ce2ae8f7ee938.ctex"
+uid="uid://cy1qlog6vn5kq"
+path="res://.godot/imported/LineMesh.svg-f7407df3af73f947c4d61e662abe9b1a.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://addons/line3d/icons/Line3DMesh.svg"
-dest_files=["res://.godot/imported/Line3DMesh.svg-fda1899891eea84c005ce2ae8f7ee938.ctex"]
+source_file="res://addons/line3d/icons/LineMesh.svg"
+dest_files=["res://.godot/imported/LineMesh.svg-f7407df3af73f947c4d61e662abe9b1a.ctex"]
 
 [params]
 

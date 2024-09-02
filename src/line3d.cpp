@@ -41,7 +41,7 @@ Line3D::~Line3D() {
 
 #pragma region m_mesh
 
-Ref<Line3DMesh> Line3D::get_mesh() const {
+Ref<LineMesh> Line3D::get_mesh() const {
 	return m_mesh;
 }
 

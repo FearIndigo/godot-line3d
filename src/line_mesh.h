@@ -6,8 +6,8 @@
 
 namespace godot {
 
-class Line3DMesh : public ImmediateMesh {
-	GDCLASS(Line3DMesh, ImmediateMesh)
+class LineMesh : public ImmediateMesh {
+	GDCLASS(LineMesh, ImmediateMesh)
 
 private:
 	PackedVector3Array m_points;
@@ -21,8 +21,8 @@ protected:
 	int64_t _get_num_segments() const;
 
 public:
-	Line3DMesh();
-	~Line3DMesh();
+	LineMesh();
+	~LineMesh();
 
 	void add_point(const Vector3 &p_position, int64_t p_index = -1);
 	void clear_points();

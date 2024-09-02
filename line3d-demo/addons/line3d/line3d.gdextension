@@ -26,4 +26,4 @@ android.release.arm64 = "res://addons/line3d/bin/line3d.android.template_release
 [icons]
 
 Line3D = "res://addons/line3d/icons/Line3D.svg"
-Line3DMesh = "res://addons/line3d/icons/Line3DMesh.svg"
+LineMesh = "res://addons/line3d/icons/LineMesh.svg"

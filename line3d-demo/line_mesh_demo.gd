@@ -1,4 +1,4 @@
-class_name Line3DMeshDemo
+class_name LineMeshDemo
 
 extends MeshInstance3D
 
@@ -6,7 +6,7 @@ extends MeshInstance3D
 var time: float = 0.0
 
 func _init() -> void:
-	mesh = Line3DMesh.new()
+	mesh = LineMesh.new()
 	mesh.points = [Vector3(0,0,0), Vector3(0,1,0)]
 
 func _process(delta: float) -> void:
@@ -14,5 +14,5 @@ func _process(delta: float) -> void:
 	point.x = sin(time)
 	mesh.set_point_position(1, point)
 	time += delta * speed
-	# Call redraw() to apply changes to the Line3DMesh.
+	# Call redraw() to apply changes to the LineMesh.
 	mesh.redraw()

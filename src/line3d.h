@@ -3,7 +3,7 @@
 
 #include <godot_cpp/classes/geometry_instance3d.hpp>
 
-#include "line3d_mesh.h"
+#include "line_mesh.h"
 
 namespace godot {
 
@@ -11,7 +11,7 @@ class Line3D : public GeometryInstance3D {
 	GDCLASS(Line3D, GeometryInstance3D)
 
 private:
-	Ref<Line3DMesh> m_mesh;
+	Ref<LineMesh> m_mesh;
 	bool m_is_dirty = false;
 
 protected:
@@ -22,7 +22,7 @@ public:
 	Line3D();
 	~Line3D();
 
-	Ref<Line3DMesh> get_mesh() const;
+	Ref<LineMesh> get_mesh() const;
 
 	void add_point(const Vector3 &p_position, int64_t p_index = -1);
 	void clear_points();

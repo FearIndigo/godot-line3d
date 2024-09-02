@@ -13,6 +13,6 @@ func _process(delta: float) -> void:
 	var point = mesh.get_point_position(1)
 	point.x = sin(time)
 	mesh.set_point_position(1, point)
-	# Call redraw() to apply changes to the mesh.
-	mesh.redraw()
 	time += delta * speed
+	# Call redraw() to apply changes to the Line3DMesh.
+	mesh.redraw()

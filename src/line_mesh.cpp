@@ -207,16 +207,21 @@ void LineMesh::set_transform(const Transform3D &p_transform) {
 #pragma region helper_methods
 
 Vector3 LineMesh::_transform_position(const Vector3 &p_local_position) const {
-	return m_use_transform ? m_inverse_transform.xform(p_local_position) : p_local_position;
+	return m_use_transform ?
+		m_inverse_transform.xform(p_local_position) :
+		p_local_position;
 }
 
 Vector3 LineMesh::_transform_direction(const Vector3 &p_local_direction) const {
-	return m_use_transform ? m_inverse_transform.basis.xform(p_local_direction) : p_local_direction;
+	return m_use_transform ?
+		m_inverse_transform.basis.xform(p_local_direction) :
+		p_local_direction;
 }
 
 Vector3 LineMesh::_get_position_normal(const Vector3 &p_position) const {
-	if(m_alignment == ALIGN_TO_NORMAL) return _transform_direction(m_normal);
-	return p_position.direction_to(_transform_position(m_normal));
+	return m_alignment == ALIGN_TO_NORMAL ?
+		_transform_direction(m_normal) :
+		p_position.direction_to(_transform_position(m_normal));
 }
 
 #pragma endregion

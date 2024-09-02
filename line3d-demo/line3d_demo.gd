@@ -1,4 +1,4 @@
-class_name Demo
+class_name Line3DDemo
 
 extends Line3D
 

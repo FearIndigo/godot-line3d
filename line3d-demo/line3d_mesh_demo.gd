@@ -1,4 +1,4 @@
-class_name DemoMesh
+class_name Line3DMeshDemo
 
 extends MeshInstance3D
 

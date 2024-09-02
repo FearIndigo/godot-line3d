@@ -22,3 +22,8 @@ android.debug.x86_64 = "res://addons/line3d/bin/line3d.android.template_debug.x8
 android.release.x86_64 = "res://addons/line3d/bin/line3d.android.template_release.x86_64.so"
 android.debug.arm64 = "res://addons/line3d/bin/line3d.android.template_debug.arm64.so"
 android.release.arm64 = "res://addons/line3d/bin/line3d.android.template_release.arm64.so"
+
+[icons]
+
+Line3D = "res://addons/line3d/icons/Line3D.svg"
+Line3DMesh = "res://addons/line3d/icons/Line3DMesh.svg"

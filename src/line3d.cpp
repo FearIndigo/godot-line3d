@@ -256,9 +256,10 @@ void Line3D::_notification(int p_what) {
 			}
 		}
 
-		// Redraw mesh if dirty.
-		if(!m_is_dirty) return;
-		m_mesh->redraw();
-		m_is_dirty = false;
+		// Redraw mesh.
+		if(m_is_dirty) {
+			m_mesh->redraw();
+			m_is_dirty = false;
+		}
 	}
 }

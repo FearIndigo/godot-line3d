@@ -66,7 +66,7 @@ LineMesh::~LineMesh() {
 #pragma region m_points
 
 void LineMesh::add_point(const Vector3 &p_position, int64_t p_index) {
-	if(p_index == -1) p_index = m_points.size();
+	if(p_index == -1) m_points.push_back(p_position);
 	m_points.insert(p_index, p_position);
 }
 

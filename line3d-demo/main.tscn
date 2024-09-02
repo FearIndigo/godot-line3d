@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3 uid="uid://disr5adx5hhtw"]
+[gd_scene load_steps=8 format=3 uid="uid://disr5adx5hhtw"]
 
 [ext_resource type="Script" path="res://line3d_demo.gd" id="1_nik3e"]
 [ext_resource type="Script" path="res://line_mesh_demo.gd" id="2_gxolv"]
@@ -14,6 +14,8 @@ sky = SubResource("Sky_gnac3")
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_kwc0f"]
 size = Vector2(10, 10)
+
+[sub_resource type="LineMesh" id="LineMesh_ix8ss"]
 
 [node name="Main" type="Node3D"]
 
@@ -38,4 +40,5 @@ script = ExtResource("1_nik3e")
 
 [node name="LineMeshDemo" type="MeshInstance3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 0, 0)
+mesh = SubResource("LineMesh_ix8ss")
 script = ExtResource("2_gxolv")

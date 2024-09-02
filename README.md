@@ -4,6 +4,12 @@ A 3D line renderer for Godot built using GDExtension.
 
 Targets Godot version 4.3.
 
+## Features
+
+- **Line3D:** A new node to render a line in 3D space with a similar interface to the built-in Line2D node.
+- **LineMesh:** A new mesh resource which is used by Line3D under the hood. It features a similar interface but is a bit more involved to use.
+- **Trail3D:** A new node to render a trail in 3D space similar to unity's trail renderer component.
+
 ## Demo
 
 A demo project is provided in the `line3d-demo` folder that showcases some basic functionality.
@@ -22,6 +28,6 @@ git submodule update --init
 scons platform=<platform>
 ```
 
-## Usage
+## Installation
 
 After compiling the binaries, copy the `line3d-demo/addons/line3d` folder into your project's `addons` folder.

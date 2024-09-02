@@ -26,6 +26,14 @@ void LineMesh::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("get_width_curve"), &LineMesh::get_width_curve);
 	ADD_PROPERTY(PropertyInfo(Variant::OBJECT, "width_curve", PROPERTY_HINT_RESOURCE_TYPE, "Curve"), "set_width_curve", "get_width_curve");
 
+	ClassDB::bind_method(D_METHOD("set_color", "color"), &LineMesh::set_color);
+	ClassDB::bind_method(D_METHOD("get_color"), &LineMesh::get_color);
+	ADD_PROPERTY(PropertyInfo(Variant::COLOR, "color"), "set_color", "get_color");
+
+	ClassDB::bind_method(D_METHOD("set_gradient", "gradient"), &LineMesh::set_gradient);
+	ClassDB::bind_method(D_METHOD("get_gradient"), &LineMesh::get_gradient);
+	ADD_PROPERTY(PropertyInfo(Variant::OBJECT, "gradient", PROPERTY_HINT_RESOURCE_TYPE, "Gradient"), "set_gradient", "get_gradient");
+
 	ClassDB::bind_method(D_METHOD("redraw"), &LineMesh::redraw);
 }
 
@@ -106,6 +114,30 @@ void LineMesh::set_width_curve(const Ref<Curve> &p_width_curve) {
 
 #pragma endregion
 
+#pragma region m_color
+
+Color LineMesh::get_color() const {
+	return m_color;
+}
+
+void LineMesh::set_color(const Color &p_color) {
+	m_color = p_color;
+}
+
+#pragma endregion
+
+#pragma region m_gradient
+
+Ref<Gradient> LineMesh::get_gradient() const {
+	return m_gradient;
+}
+
+void LineMesh::set_gradient(const Ref<Gradient> &p_gradient) {
+	m_gradient = p_gradient;
+}
+
+#pragma endregion
+
 #pragma region helper_methods
 
 double LineMesh::_get_line_length() const {
@@ -145,15 +177,18 @@ void LineMesh::redraw() {
 	// Prepare attributes for add_vertex.
 	surface_set_normal(Vector3(0, 0, 1));
 	surface_set_uv(Vector2(0, 0));
+	surface_set_color(m_color);
 	// Call last for each vertex, adds the above attributes.
 	surface_add_vertex(Vector3(-1, -1, 0));
 
 	surface_set_normal(Vector3(0, 0, 1));
 	surface_set_uv(Vector2(0, 1));
+	surface_set_color(m_color);
 	surface_add_vertex(Vector3(-1, 1, 0));
 
 	surface_set_normal(Vector3(0, 0, 1));
 	surface_set_uv(Vector2(1, 1));
+	surface_set_color(m_color);
 	surface_add_vertex(Vector3(1, 1, 0));
 
 	// End drawing.

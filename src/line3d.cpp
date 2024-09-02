@@ -27,6 +27,14 @@ void Line3D::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("set_width_curve", "curve"), &Line3D::set_width_curve);
 	ClassDB::bind_method(D_METHOD("get_width_curve"), &Line3D::get_width_curve);
 	ADD_PROPERTY(PropertyInfo(Variant::OBJECT, "width_curve", PROPERTY_HINT_RESOURCE_TYPE, "Curve"), "set_width_curve", "get_width_curve");
+
+	ClassDB::bind_method(D_METHOD("set_color", "color"), &Line3D::set_color);
+	ClassDB::bind_method(D_METHOD("get_color"), &Line3D::get_color);
+	ADD_PROPERTY(PropertyInfo(Variant::COLOR, "color"), "set_color", "get_color");
+
+	ClassDB::bind_method(D_METHOD("set_gradient", "gradient"), &Line3D::set_gradient);
+	ClassDB::bind_method(D_METHOD("get_gradient"), &Line3D::get_gradient);
+	ADD_PROPERTY(PropertyInfo(Variant::OBJECT, "gradient", PROPERTY_HINT_RESOURCE_TYPE, "Gradient"), "set_gradient", "get_gradient");
 }
 
 Line3D::Line3D() {
@@ -118,6 +126,32 @@ Ref<Curve> Line3D::get_width_curve() const {
 
 void Line3D::set_width_curve(const Ref<Curve> &p_width_curve) {
 	m_mesh->set_width_curve(p_width_curve);
+	m_is_dirty = true;
+}
+
+#pragma endregion
+
+#pragma region m_color
+
+Color Line3D::get_color() const {
+	return m_mesh->get_color();
+}
+
+void Line3D::set_color(const Color &p_color) {
+	m_mesh->set_color(p_color);
+	m_is_dirty = true;
+}
+
+#pragma endregion
+
+#pragma region m_gradient
+
+Ref<Gradient> Line3D::get_gradient() const {
+	return m_mesh->get_gradient();
+}
+
+void Line3D::set_gradient(const Ref<Gradient> &p_gradient) {
+	m_mesh->set_gradient(p_gradient);
 	m_is_dirty = true;
 }
 

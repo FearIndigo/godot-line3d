@@ -3,6 +3,7 @@
 
 #include <godot_cpp/classes/immediate_mesh.hpp>
 #include <godot_cpp/classes/curve.hpp>
+#include <godot_cpp/classes/gradient.hpp>
 
 namespace godot {
 
@@ -14,6 +15,8 @@ private:
 	bool m_closed = false;
 	double m_width = 1.0;
 	Ref<Curve> m_width_curve;
+	Color m_color = Color(1, 1, 1, 1);
+	Ref<Gradient> m_gradient;
 
 protected:
 	static void _bind_methods();
@@ -40,6 +43,12 @@ public:
 
 	Ref<Curve> get_width_curve() const;
 	void set_width_curve(const Ref<Curve> &p_width_curve);
+
+	Color get_color() const;
+	void set_color(const Color &p_color);
+
+	Ref<Gradient> get_gradient() const;
+	void set_gradient(const Ref<Gradient> &p_gradient);
 
 	void redraw();
 };

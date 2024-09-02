@@ -40,6 +40,12 @@ public:
 
 	Ref<Curve> get_width_curve() const;
 	void set_width_curve(const Ref<Curve> &p_width_curve);
+
+	Color get_color() const;
+	void set_color(const Color &p_color);
+
+	Ref<Gradient> get_gradient() const;
+	void set_gradient(const Ref<Gradient> &p_gradient);
 };
 
 }

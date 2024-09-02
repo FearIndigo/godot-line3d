@@ -22,6 +22,10 @@ void Line3DMesh::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("get_width"), &Line3DMesh::get_width);
 	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "width", PROPERTY_HINT_RANGE, "0,10,,or_greater"), "set_width", "get_width");
 
+	ClassDB::bind_method(D_METHOD("set_width_curve", "curve"), &Line3DMesh::set_width_curve);
+	ClassDB::bind_method(D_METHOD("get_width_curve"), &Line3DMesh::get_width_curve);
+	ADD_PROPERTY(PropertyInfo(Variant::OBJECT, "width_curve", PROPERTY_HINT_RESOURCE_TYPE, "Curve"), "set_width_curve", "get_width_curve");
+
 	ClassDB::bind_method(D_METHOD("redraw"), &Line3DMesh::redraw);
 }
 
@@ -90,6 +94,18 @@ void Line3DMesh::set_width(double p_width) {
 
 #pragma endregion
 
+#pragma region m_width_curve
+
+Ref<Curve> Line3DMesh::get_width_curve() const {
+	return m_width_curve;
+}
+
+void Line3DMesh::set_width_curve(const Ref<Curve> &p_width_curve) {
+	m_width_curve = p_width_curve;
+}
+
+#pragma endregion
+
 #pragma region helper_methods
 
 double Line3DMesh::_get_line_length() const {
@@ -112,8 +128,8 @@ void Line3DMesh::redraw() {
 	// Clear mesh.
 	clear_surfaces();
 
-	// Return if width is 0 or less.
-	if(m_width <= 0) return;
+	// Return if width is 0 or less. If there is a width curve, assume it has some thickness.
+	if(m_width <= 0 && m_width_curve.is_null()) return;
 
 	// Return if no segments to draw.
 	int64_t num_segments = _get_num_segments();

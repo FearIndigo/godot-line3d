@@ -2,6 +2,7 @@
 #define LINE3D_MESH_H
 
 #include <godot_cpp/classes/immediate_mesh.hpp>
+#include <godot_cpp/classes/curve.hpp>
 
 namespace godot {
 
@@ -12,6 +13,7 @@ private:
 	PackedVector3Array m_points;
 	bool m_closed = false;
 	double m_width = 1.0;
+	Ref<Curve> m_width_curve;
 
 protected:
 	static void _bind_methods();
@@ -35,6 +37,9 @@ public:
 
 	double get_width() const;
 	void set_width(double p_width);
+
+	Ref<Curve> get_width_curve() const;
+	void set_width_curve(const Ref<Curve> &p_width_curve);
 
 	void redraw();
 };

@@ -23,6 +23,10 @@ void Line3D::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("set_width", "width"), &Line3D::set_width);
 	ClassDB::bind_method(D_METHOD("get_width"), &Line3D::get_width);
 	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "width", PROPERTY_HINT_RANGE, "0,10,,or_greater"), "set_width", "get_width");
+
+	ClassDB::bind_method(D_METHOD("set_width_curve", "curve"), &Line3D::set_width_curve);
+	ClassDB::bind_method(D_METHOD("get_width_curve"), &Line3D::get_width_curve);
+	ADD_PROPERTY(PropertyInfo(Variant::OBJECT, "width_curve", PROPERTY_HINT_RESOURCE_TYPE, "Curve"), "set_width_curve", "get_width_curve");
 }
 
 Line3D::Line3D() {
@@ -101,6 +105,19 @@ double Line3D::get_width() const {
 
 void Line3D::set_width(double p_width) {
 	m_mesh->set_width(p_width);
+	m_is_dirty = true;
+}
+
+#pragma endregion
+
+#pragma region m_width_curve
+
+Ref<Curve> Line3D::get_width_curve() const {
+	return m_mesh->get_width_curve();
+}
+
+void Line3D::set_width_curve(const Ref<Curve> &p_width_curve) {
+	m_mesh->set_width_curve(p_width_curve);
 	m_is_dirty = true;
 }
 

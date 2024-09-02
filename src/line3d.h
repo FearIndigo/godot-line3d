@@ -37,6 +37,9 @@ public:
 
 	double get_width() const;
 	void set_width(double p_width);
+
+	Ref<Curve> get_width_curve() const;
+	void set_width_curve(const Ref<Curve> &p_width_curve);
 };
 
 }

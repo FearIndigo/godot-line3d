@@ -5,6 +5,9 @@
 using namespace godot;
 
 void LineMesh::_bind_methods() {
+	BIND_ENUM_CONSTANT(FACE_TOWARD_POSITION);
+	BIND_ENUM_CONSTANT(ALIGN_TO_NORMAL);
+
 	ClassDB::bind_method(D_METHOD("add_point", "position", "index"), &LineMesh::add_point, DEFVAL(-1));
 	ClassDB::bind_method(D_METHOD("clear_points"), &LineMesh::clear_points);
 	ClassDB::bind_method(D_METHOD("get_point_position", "index"), &LineMesh::get_point_position);
@@ -33,6 +36,14 @@ void LineMesh::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("set_gradient", "gradient"), &LineMesh::set_gradient);
 	ClassDB::bind_method(D_METHOD("get_gradient"), &LineMesh::get_gradient);
 	ADD_PROPERTY(PropertyInfo(Variant::OBJECT, "gradient", PROPERTY_HINT_RESOURCE_TYPE, "Gradient"), "set_gradient", "get_gradient");
+
+	ClassDB::bind_method(D_METHOD("set_alignment", "alignment"), &LineMesh::set_alignment);
+	ClassDB::bind_method(D_METHOD("get_alignment"), &LineMesh::get_alignment);
+	ADD_PROPERTY(PropertyInfo(Variant::INT, "alignment", PROPERTY_HINT_ENUM, "Face Toward Position,Align To Normal"), "set_alignment", "get_alignment");
+
+	ClassDB::bind_method(D_METHOD("set_normal", "normal"), &LineMesh::set_normal);
+	ClassDB::bind_method(D_METHOD("get_normal"), &LineMesh::get_normal);
+	ADD_PROPERTY(PropertyInfo(Variant::VECTOR3, "normal"), "set_normal", "get_normal");
 
 	ClassDB::bind_method(D_METHOD("redraw"), &LineMesh::redraw);
 }
@@ -138,20 +149,34 @@ void LineMesh::set_gradient(const Ref<Gradient> &p_gradient) {
 
 #pragma endregion
 
-#pragma region helper_methods
+#pragma region m_alignment
 
-double LineMesh::_get_line_length() const {
-	double line_length = 0.0;
-	int64_t num_points = m_points.size();
-	for (int i = 0; i < _get_num_segments(); i++) {
-		line_length += m_points[i].distance_to(m_points[(i + 1) % num_points]);
-	}
-	return line_length;
+LineMesh::LineAlignment LineMesh::get_alignment() const {
+	return m_alignment;
 }
 
-int64_t LineMesh::_get_num_segments() const {
-	int64_t num_points = m_points.size();
-	return (m_closed && num_points > 2) ? num_points : num_points - 1;
+void LineMesh::set_alignment(LineMesh::LineAlignment p_alignment) {
+	m_alignment = p_alignment;
+}
+
+#pragma endregion
+
+#pragma region m_normal
+
+Vector3 LineMesh::get_normal() const {
+	return m_normal;
+}
+void LineMesh::set_normal(const Vector3 &p_normal) {
+	m_normal = p_normal;
+}
+
+#pragma endregion
+
+#pragma region helper_methods
+
+Vector3 LineMesh::_get_position_normal(const Vector3 &p_local_position) const {
+	if(m_alignment == ALIGN_TO_NORMAL) return m_normal;
+	return p_local_position.direction_to(m_normal);
 }
 
 #pragma endregion
@@ -163,30 +188,24 @@ void LineMesh::redraw() {
 	// Return if line has no width.
 	if(m_width <= 0.0) return;
 
-	// Return if no segments to draw.
-	int64_t num_segments = _get_num_segments();
-	if(num_segments <= 0) return;
-
-	// Return if line has no length.
-	double line_length = _get_line_length();
-	if(line_length <= 0.0) return;
+	// Return if line doesn't have 2 or more points.
+	int64_t num_points = m_points.size();
+	if(num_points < 2) return;
 
 	// Begin draw.
 	surface_begin(PRIMITIVE_TRIANGLES);
 
-	// Prepare attributes for add_vertex.
-	surface_set_normal(Vector3(0, 0, 1));
+	surface_set_normal(_get_position_normal(Vector3(-1, -1, 0)));
 	surface_set_uv(Vector2(0, 0));
 	surface_set_color(m_color);
-	// Call last for each vertex, adds the above attributes.
 	surface_add_vertex(Vector3(-1, -1, 0));
 
-	surface_set_normal(Vector3(0, 0, 1));
+	surface_set_normal(_get_position_normal(Vector3(-1, 1, 0)));
 	surface_set_uv(Vector2(0, 1));
 	surface_set_color(m_color);
 	surface_add_vertex(Vector3(-1, 1, 0));
 
-	surface_set_normal(Vector3(0, 0, 1));
+	surface_set_normal(_get_position_normal(Vector3(1, 1, 0)));
 	surface_set_uv(Vector2(1, 1));
 	surface_set_color(m_color);
 	surface_add_vertex(Vector3(1, 1, 0));

@@ -10,6 +10,12 @@ namespace godot {
 class LineMesh : public ImmediateMesh {
 	GDCLASS(LineMesh, ImmediateMesh)
 
+public:
+	enum LineAlignment {
+		FACE_TOWARD_POSITION,
+		ALIGN_TO_NORMAL,
+	};
+
 private:
 	PackedVector3Array m_points;
 	bool m_closed = false;
@@ -17,11 +23,13 @@ private:
 	Ref<Curve> m_width_curve;
 	Color m_color = Color(1, 1, 1, 1);
 	Ref<Gradient> m_gradient;
+	LineMesh::LineAlignment m_alignment = ALIGN_TO_NORMAL;
+	Vector3 m_normal = Vector3(0, 0, 1);
 
 protected:
 	static void _bind_methods();
-	double _get_line_length() const;
-	int64_t _get_num_segments() const;
+
+	Vector3 _get_position_normal(const Vector3 &p_local_position) const;
 
 public:
 	LineMesh();
@@ -50,9 +58,17 @@ public:
 	Ref<Gradient> get_gradient() const;
 	void set_gradient(const Ref<Gradient> &p_gradient);
 
+	LineMesh::LineAlignment get_alignment() const;
+	void set_alignment(LineMesh::LineAlignment p_alignment);
+
+	Vector3 get_normal() const;
+	void set_normal(const Vector3 &p_normal);
+
 	void redraw();
 };
 
 } // namespace godot
+
+VARIANT_ENUM_CAST(LineMesh::LineAlignment);
 
 #endif // LINE3D_MESH_H

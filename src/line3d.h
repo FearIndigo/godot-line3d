@@ -10,9 +10,17 @@ namespace godot {
 class Line3D : public GeometryInstance3D {
 	GDCLASS(Line3D, GeometryInstance3D)
 
+public:
+	enum LineAlignment {
+		ALIGN_TO_VIEW,
+		FACE_TOWARD_POSITION,
+		ALIGN_TO_NORMAL,
+	};
+
 private:
 	Ref<LineMesh> m_mesh;
 	bool m_is_dirty = false;
+	Line3D::LineAlignment m_alignment = ALIGN_TO_NORMAL;
 
 protected:
 	static void _bind_methods();
@@ -46,8 +54,16 @@ public:
 
 	Ref<Gradient> get_gradient() const;
 	void set_gradient(const Ref<Gradient> &p_gradient);
+
+	Line3D::LineAlignment get_alignment() const;
+	void set_alignment(Line3D::LineAlignment p_alignment);
+
+	Vector3 get_normal() const;
+	void set_normal(const Vector3 &p_normal);
 };
 
 } // namespace godot
+
+VARIANT_ENUM_CAST(Line3D::LineAlignment);
 
 #endif // LINE3D_H

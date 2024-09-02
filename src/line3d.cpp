@@ -1,10 +1,16 @@
 #include "line3d.h"
 
 #include <godot_cpp/core/class_db.hpp>
+#include <godot_cpp/classes/viewport.hpp>
+#include <godot_cpp/classes/camera3d.hpp>
 
 using namespace godot;
 
 void Line3D::_bind_methods() {
+	BIND_ENUM_CONSTANT(ALIGN_TO_VIEW);
+	BIND_ENUM_CONSTANT(FACE_TOWARD_POSITION);
+	BIND_ENUM_CONSTANT(ALIGN_TO_NORMAL);
+
 	ClassDB::bind_method(D_METHOD("get_mesh"), &Line3D::get_mesh);
 
 	ClassDB::bind_method(D_METHOD("add_point", "position", "index"), &Line3D::add_point, DEFVAL(-1));
@@ -35,6 +41,14 @@ void Line3D::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("set_gradient", "gradient"), &Line3D::set_gradient);
 	ClassDB::bind_method(D_METHOD("get_gradient"), &Line3D::get_gradient);
 	ADD_PROPERTY(PropertyInfo(Variant::OBJECT, "gradient", PROPERTY_HINT_RESOURCE_TYPE, "Gradient"), "set_gradient", "get_gradient");
+
+	ClassDB::bind_method(D_METHOD("set_alignment", "alignment"), &Line3D::set_alignment);
+	ClassDB::bind_method(D_METHOD("get_alignment"), &Line3D::get_alignment);
+	ADD_PROPERTY(PropertyInfo(Variant::INT, "alignment", PROPERTY_HINT_ENUM, "Align To View,Face Toward Position,Align To Normal"), "set_alignment", "get_alignment");
+
+	ClassDB::bind_method(D_METHOD("set_normal", "normal"), &Line3D::set_normal);
+	ClassDB::bind_method(D_METHOD("get_normal"), &Line3D::get_normal);
+	ADD_PROPERTY(PropertyInfo(Variant::VECTOR3, "normal"), "set_normal", "get_normal");
 }
 
 Line3D::Line3D() {
@@ -157,8 +171,52 @@ void Line3D::set_gradient(const Ref<Gradient> &p_gradient) {
 
 #pragma endregion
 
+#pragma region m_alignment
+
+Line3D::LineAlignment Line3D::get_alignment() const {
+	return m_alignment;
+}
+
+void Line3D::set_alignment(Line3D::LineAlignment p_alignment) {
+	m_alignment = p_alignment;
+	switch(m_alignment) {
+  	case ALIGN_TO_VIEW:
+  	case FACE_TOWARD_POSITION:
+    	m_mesh->set_alignment(LineMesh::LineAlignment::FACE_TOWARD_POSITION);
+    	break;
+  	case ALIGN_TO_NORMAL:
+    	m_mesh->set_alignment(LineMesh::LineAlignment::ALIGN_TO_NORMAL);
+	}
+	m_is_dirty = true;
+}
+
+#pragma endregion
+
+#pragma region m_normal
+
+Vector3 Line3D::get_normal() const {
+	return m_mesh->get_normal();
+}
+void Line3D::set_normal(const Vector3 &p_normal) {
+	m_mesh->set_normal(p_normal);
+	m_is_dirty = true;
+}
+
+#pragma endregion
+
 void Line3D::_notification(int p_what) {
 	if(p_what == NOTIFICATION_PROCESS) {
+		// Update view alignment.
+		if(m_alignment == ALIGN_TO_VIEW) {
+			Camera3D *camera = get_viewport()->get_camera_3d();
+			if(camera != nullptr) {
+				Vector3 relative_camera_position = to_local(camera->get_global_position());
+				if(!relative_camera_position.is_equal_approx(get_normal())) {
+					set_normal(relative_camera_position);
+				}
+			}
+		}
+		// Redraw mesh if dirty.
 		if(!m_is_dirty) return;
 		m_mesh->redraw();
 		m_is_dirty = false;

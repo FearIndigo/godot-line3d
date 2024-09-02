@@ -18,6 +18,10 @@ void Line3DMesh::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("get_closed"), &Line3DMesh::get_closed);
 	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "closed"), "set_closed", "get_closed");
 
+	ClassDB::bind_method(D_METHOD("set_width", "width"), &Line3DMesh::set_width);
+	ClassDB::bind_method(D_METHOD("get_width"), &Line3DMesh::get_width);
+	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "width", PROPERTY_HINT_RANGE, "0,10,,or_greater"), "set_width", "get_width");
+
 	ClassDB::bind_method(D_METHOD("redraw"), &Line3DMesh::redraw);
 }
 
@@ -74,6 +78,18 @@ void Line3DMesh::set_closed(bool p_closed) {
 
 #pragma endregion
 
+#pragma region m_width
+
+double Line3DMesh::get_width() const {
+	return m_width;
+}
+
+void Line3DMesh::set_width(double p_width) {
+	m_width = p_width;
+}
+
+#pragma endregion
+
 #pragma region helper_methods
 
 double Line3DMesh::_get_line_length() const {
@@ -95,6 +111,9 @@ int64_t Line3DMesh::_get_num_segments() const {
 void Line3DMesh::redraw() {
 	// Clear mesh.
 	clear_surfaces();
+
+	// Return if width is 0 or less
+	if(m_width <= 0) return;
 
 	// Return if no segments to draw.
 	int64_t num_segments = _get_num_segments();

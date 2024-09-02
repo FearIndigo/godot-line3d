@@ -19,6 +19,10 @@ void Line3D::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("set_closed", "closed"), &Line3D::set_closed);
 	ClassDB::bind_method(D_METHOD("get_closed"), &Line3D::get_closed);
 	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "closed"), "set_closed", "get_closed");
+
+	ClassDB::bind_method(D_METHOD("set_width", "width"), &Line3D::set_width);
+	ClassDB::bind_method(D_METHOD("get_width"), &Line3D::get_width);
+	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "width", PROPERTY_HINT_RANGE, "0,10,,or_greater"), "set_width", "get_width");
 }
 
 Line3D::Line3D() {
@@ -84,6 +88,19 @@ bool Line3D::get_closed() const {
 
 void Line3D::set_closed(bool p_closed) {
 	m_mesh->set_closed(p_closed);
+	m_is_dirty = true;
+}
+
+#pragma endregion
+
+#pragma region m_width
+
+double Line3D::get_width() const {
+	return m_mesh->get_width();
+}
+
+void Line3D::set_width(double p_width) {
+	m_mesh->set_width(p_width);
 	m_is_dirty = true;
 }
 

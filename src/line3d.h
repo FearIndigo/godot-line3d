@@ -34,6 +34,9 @@ public:
 
 	bool get_closed() const;
 	void set_closed(bool p_closed);
+
+	double get_width() const;
+	void set_width(double p_width);
 };
 
 }

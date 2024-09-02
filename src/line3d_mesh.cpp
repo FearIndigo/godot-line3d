@@ -112,7 +112,7 @@ void Line3DMesh::redraw() {
 	// Clear mesh.
 	clear_surfaces();
 
-	// Return if width is 0 or less
+	// Return if width is 0 or less.
 	if(m_width <= 0) return;
 
 	// Return if no segments to draw.

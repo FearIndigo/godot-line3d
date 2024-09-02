@@ -30,6 +30,8 @@ public:
 	Line3D();
 	~Line3D();
 
+	void _process(double delta) override {};
+
 	Ref<LineMesh> get_mesh() const;
 
 	void add_point(const Vector3 &p_position, int64_t p_index = -1);

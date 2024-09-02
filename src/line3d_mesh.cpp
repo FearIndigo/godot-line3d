@@ -109,17 +109,17 @@ void Line3DMesh::set_width_curve(const Ref<Curve> &p_width_curve) {
 #pragma region helper_methods
 
 double Line3DMesh::_get_line_length() const {
-	double length = 0.0;
-	int64_t size = m_points.size();
+	double line_length = 0.0;
+	int64_t num_points = m_points.size();
 	for (int i = 0; i < _get_num_segments(); i++) {
-		length += m_points[i].distance_to(m_points[(i + 1) % size]);
+		line_length += m_points[i].distance_to(m_points[(i + 1) % num_points]);
 	}
-	return length;
+	return line_length;
 }
 
 int64_t Line3DMesh::_get_num_segments() const {
-	int64_t size = m_points.size();
-	return (m_closed && size > 2) ? size : size - 1;
+	int64_t num_points = m_points.size();
+	return (m_closed && num_points > 2) ? num_points : num_points - 1;
 }
 
 #pragma endregion
@@ -128,12 +128,16 @@ void Line3DMesh::redraw() {
 	// Clear mesh.
 	clear_surfaces();
 
-	// Return if width is 0 or less. If there is a width curve, assume it has some thickness.
-	if(m_width <= 0 && m_width_curve.is_null()) return;
+	// Return if line has no width. If there is a width curve, assume it has some thickness.
+	if(m_width <= 0.0 && m_width_curve.is_null()) return;
 
 	// Return if no segments to draw.
 	int64_t num_segments = _get_num_segments();
 	if(num_segments <= 0) return;
+
+	// Return if line has no length.
+	double line_length = _get_line_length();
+	if(line_length <= 0.0) return;
 
 	// Begin draw.
 	surface_begin(PRIMITIVE_TRIANGLES);

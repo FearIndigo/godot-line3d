@@ -48,6 +48,6 @@ public:
 	void set_gradient(const Ref<Gradient> &p_gradient);
 };
 
-}
+} // namespace godot
 
 #endif // LINE3D_H

@@ -53,6 +53,6 @@ public:
 	void redraw();
 };
 
-}
+} // namespace godot
 
 #endif // LINE3D_MESH_H

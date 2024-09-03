@@ -1,5 +1,58 @@
-[gd_scene format=3 uid="uid://disr5adx5hhtw"]
+[gd_scene load_steps=11 format=3 uid="uid://disr5adx5hhtw"]
 
-[node name="Node3D" type="Node3D"]
+[ext_resource type="Script" path="res://camera_controls.gd" id="1_ikykm"]
+[ext_resource type="Script" path="res://line3d_demo.gd" id="1_nik3e"]
+[ext_resource type="Script" path="res://line_mesh_demo.gd" id="2_gxolv"]
+[ext_resource type="Script" path="res://fps_counter.gd" id="2_r1cp3"]
 
-[node name="Line3D" type="Line3D" parent="."]
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_p4ti3"]
+
+[sub_resource type="Sky" id="Sky_gnac3"]
+sky_material = SubResource("ProceduralSkyMaterial_p4ti3")
+
+[sub_resource type="Environment" id="Environment_c6eyg"]
+background_mode = 2
+sky = SubResource("Sky_gnac3")
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_kwc0f"]
+size = Vector2(50, 50)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_cuggl"]
+albedo_color = Color(0.47, 0.28952, 0.1316, 1)
+
+[sub_resource type="LineMesh" id="LineMesh_1y234"]
+
+[node name="Main" type="Node3D"]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_c6eyg")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.707107, 0.707107, 0, -0.707107, 0.707107, 0, 0, 0)
+light_energy = 1.5
+shadow_enabled = true
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5, 8)
+script = ExtResource("1_ikykm")
+
+[node name="Floor" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0)
+mesh = SubResource("PlaneMesh_kwc0f")
+surface_material_override/0 = SubResource("StandardMaterial3D_cuggl")
+
+[node name="FPSCounter" type="Label" parent="."]
+offset_right = 40.0
+offset_bottom = 23.0
+script = ExtResource("2_r1cp3")
+
+[node name="Line3DDemo" type="Line3D" parent="."]
+alignment = 0
+normal = Vector3(2, 5, 8)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 0, 0)
+script = ExtResource("1_nik3e")
+
+[node name="LineMeshDemo" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 0, 0)
+mesh = SubResource("LineMesh_1y234")
+script = ExtResource("2_gxolv")

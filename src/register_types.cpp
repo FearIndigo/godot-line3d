@@ -1,6 +1,7 @@
 #include "register_types.h"
 
 #include "line3d.h"
+#include "line_mesh.h"
 
 #include <gdextension_interface.h>
 #include <godot_cpp/core/defs.hpp>
@@ -14,6 +15,7 @@ void initialize_line3d_module(ModuleInitializationLevel p_level) {
 	}
 
 	GDREGISTER_CLASS(Line3D);
+	GDREGISTER_CLASS(LineMesh);
 }
 
 void uninitialize_line3d_module(ModuleInitializationLevel p_level) {

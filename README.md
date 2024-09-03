@@ -25,7 +25,8 @@ See the [Godot building from source docs](https://docs.godotengine.org/en/stable
 # init godot-cpp submodule
 git submodule update --init
 
-# generate and compile the bindings (replacing <platform> with windows, linux or macos depending on your target platform)
+# generate and compile the bindings
+# (replacing <platform> with windows, linux or macos depending on your target platform)
 scons platform=<platform>
 ```
 

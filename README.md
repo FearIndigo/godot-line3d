@@ -14,7 +14,8 @@ Targets Godot version 4.3.
 
 A demo project is provided in the `line3d-demo` folder that showcases some basic functionality.
 
-> **_NOTE:_** You are required to build the binaries for your target platforms for the demo project to work.
+> [!NOTE]
+> You are required to build the binaries for your target platforms for the demo project to work.
 
 ## Build
 

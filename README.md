@@ -25,10 +25,10 @@ See the [Godot building from source docs](https://docs.godotengine.org/en/stable
 # init godot-cpp submodule
 git submodule update --init
 
-# generate and compile the bindings (replacing <platform> with windows, linux or macos depending on your target OS)
+# generate and compile the bindings (replacing <platform> with windows, linux or macos depending on your target platform)
 scons platform=<platform>
 ```
 
 ## Installation
 
-After compiling the binaries, copy the `line3d-demo/addons/line3d` folder into your project's `addons` folder.
+First you need to compile the binaries for your target platforms (see build section above for more info). Once you have done that, copy the `line3d-demo/addons/line3d` folder into your project's `addons` folder.

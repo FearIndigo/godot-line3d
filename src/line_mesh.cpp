@@ -67,7 +67,7 @@ LineMesh::~LineMesh() {
 
 void LineMesh::add_point(const Vector3 &p_position, int64_t p_index) {
 	if(p_index == -1) m_points.push_back(p_position);
-	m_points.insert(p_index, p_position);
+	else m_points.insert(p_index, p_position);
 }
 
 void LineMesh::clear_points() {
@@ -218,9 +218,9 @@ Vector3 LineMesh::_transform_direction(const Vector3 &p_local_direction) const {
 		p_local_direction;
 }
 
-Vector3 LineMesh::_get_position_normal(const Vector3 &p_position) const {
+Vector3 LineMesh::_get_position_alignment(const Vector3 &p_position) const {
 	return m_alignment == ALIGN_TO_NORMAL ?
-		_transform_direction(m_normal) :
+		_transform_direction(m_normal).normalized() :
 		p_position.direction_to(_transform_position(m_normal));
 }
 
@@ -238,27 +238,47 @@ void LineMesh::redraw() {
 	if(num_points < 2) return;
 
 	// Begin draw.
-	surface_begin(PRIMITIVE_TRIANGLES);
+	surface_begin(PRIMITIVE_TRIANGLE_STRIP);
 
-	Vector3 position;
+	// Get number of segments
+	int64_t num_segments = (m_closed && num_points > 2) ? num_points : num_points - 1;
 
-	position = _transform_position(Vector3(-1, -1, 0));
-	surface_set_normal(_get_position_normal(position));
-	surface_set_uv(Vector2(0, 0));
-	surface_set_color(m_color);
-	surface_add_vertex(position);
+	// Draw segments
+	for (int64_t i = 0; i < num_points; i++) {
+		Vector3 p_current = _transform_position(m_points[i % num_points]);
+		Vector3 p_next = m_closed || i < num_points - 1 ?
+			_transform_position(m_points[(i + 1) % num_points]) :
+			p_current;
+		Vector3 p_prev = m_closed || i != 0 ?
+			_transform_position(m_points[(num_points + i - 1) % num_points]) :
+			p_current;
 
-	position = _transform_position(Vector3(-1, 1, 0));
-	surface_set_normal(_get_position_normal(position));
-	surface_set_uv(Vector2(0, 1));
-	surface_set_color(m_color);
-	surface_add_vertex(position);
+		Vector3 alignment = _get_position_alignment(p_current);
 
-	position = _transform_position(Vector3(1, 1, 0));
-	surface_set_normal(_get_position_normal(position));
-	surface_set_uv(Vector2(1, 1));
-	surface_set_color(m_color);
-	surface_add_vertex(position);
+		Vector3 dir_in = p_prev.direction_to(p_current);
+		Vector3 dir_in_tangent = dir_in.slide(alignment);
+		Vector3 dir_out = p_current.direction_to(p_next);
+		Vector3 dir_out_tangent = dir_out.slide(alignment);
+		Vector3 dir_avg = dir_in + dir_out;
+		Vector3 dir_avg_tangent = dir_in_tangent + dir_out_tangent;
+		double tangent_angle = dir_in_tangent.angle_to(dir_out_tangent);
+
+		Vector3 tangent = dir_avg_tangent.normalized();
+		Vector3 bitangent = alignment.cross(tangent).normalized();
+		Vector3 normal = dir_avg.cross(bitangent).normalized();
+
+		bitangent *= m_width / 2.0 + m_width / 10.0 * (tangent_angle * tangent_angle);
+
+		surface_set_normal(normal);
+		surface_set_uv(Vector2(0, 1));
+		surface_set_color(m_color);
+		surface_add_vertex(p_current - bitangent);
+
+		surface_set_normal(normal);
+		surface_set_uv(Vector2(1, 1));
+		surface_set_color(m_color);
+		surface_add_vertex(p_current + bitangent);
+	}
 
 	// End drawing.
 	surface_end();

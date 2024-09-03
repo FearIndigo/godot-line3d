@@ -19,7 +19,7 @@ public:
 private:
 	PackedVector3Array m_points = {Vector3(0, 0, 0), Vector3(0, 1, 0)};
 	bool m_closed = false;
-	double m_width = 1.0;
+	double m_width = 0.2;
 	Ref<Curve> m_width_curve;
 	Color m_color = Color(1, 1, 1, 1);
 	Ref<Gradient> m_gradient;
@@ -34,7 +34,7 @@ protected:
 
 	Vector3 _transform_position(const Vector3 &p_local_position) const;
 	Vector3 _transform_direction(const Vector3 &p_local_direction) const;
-	Vector3 _get_position_normal(const Vector3 &p_position) const;
+	Vector3 _get_position_alignment(const Vector3 &p_position) const;
 
 public:
 	LineMesh();

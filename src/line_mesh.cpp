@@ -17,6 +17,14 @@ void LineMesh::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("set_points", "points"), &LineMesh::set_points);
 	ADD_PROPERTY(PropertyInfo(Variant::PACKED_VECTOR3_ARRAY, "points"), "set_points", "get_points");
 
+	ClassDB::bind_method(D_METHOD("set_simplify", "simplify"), &LineMesh::set_simplify);
+	ClassDB::bind_method(D_METHOD("get_simplify"), &LineMesh::get_simplify);
+	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "simplify"), "set_simplify", "get_simplify");
+
+	ClassDB::bind_method(D_METHOD("set_tolerance", "tolerance"), &LineMesh::set_tolerance);
+	ClassDB::bind_method(D_METHOD("get_tolerance"), &LineMesh::get_tolerance);
+	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "tolerance", PROPERTY_HINT_RANGE, "0,10,,or_greater"), "set_tolerance", "get_tolerance");
+
 	ClassDB::bind_method(D_METHOD("set_closed", "closed"), &LineMesh::set_closed);
 	ClassDB::bind_method(D_METHOD("get_closed"), &LineMesh::get_closed);
 	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "closed"), "set_closed", "get_closed");
@@ -92,6 +100,30 @@ void LineMesh::set_point_position(int64_t p_index, const Vector3 &p_position) {
 
 void LineMesh::set_points(const PackedVector3Array &p_points) {
 	m_points = p_points;
+}
+
+#pragma endregion
+
+#pragma region m_simplify
+
+bool LineMesh::get_simplify() const {
+	return m_simplify;
+}
+
+void LineMesh::set_simplify(bool p_simplify) {
+	m_simplify = p_simplify;
+}
+
+#pragma endregion
+
+#pragma region m_tolerance
+
+double LineMesh::get_tolerance() const {
+	return m_tolerance;
+}
+
+void LineMesh::set_tolerance(double p_tolerance) {
+	m_tolerance = p_tolerance;
 }
 
 #pragma endregion
@@ -206,10 +238,16 @@ void LineMesh::set_transform(const Transform3D &p_transform) {
 
 #pragma region helper_methods
 
-Vector3 LineMesh::_transform_position(const Vector3 &p_local_position) const {
-	return m_use_transform ?
-		m_inverse_transform.xform(p_local_position) :
-		p_local_position;
+Vector3 LineMesh::_get_position_alignment(const Vector3 &p_position) const {
+	return m_alignment == ALIGN_TO_NORMAL ?
+		_transform_direction(m_normal).normalized() :
+		p_position.direction_to(_transform_position(m_normal));
+}
+
+PackedVector3Array LineMesh::_get_simplified_points() const {
+	// Only perform simplification if tolerance is greater than 0.
+	if (!m_simplify || m_tolerance <= 0) return m_points;
+	return m_points;
 }
 
 Vector3 LineMesh::_transform_direction(const Vector3 &p_local_direction) const {
@@ -218,10 +256,10 @@ Vector3 LineMesh::_transform_direction(const Vector3 &p_local_direction) const {
 		p_local_direction;
 }
 
-Vector3 LineMesh::_get_position_alignment(const Vector3 &p_position) const {
-	return m_alignment == ALIGN_TO_NORMAL ?
-		_transform_direction(m_normal).normalized() :
-		p_position.direction_to(_transform_position(m_normal));
+Vector3 LineMesh::_transform_position(const Vector3 &p_local_position) const {
+	return m_use_transform ?
+		m_inverse_transform.xform(p_local_position) :
+		p_local_position;
 }
 
 #pragma endregion
@@ -233,24 +271,27 @@ void LineMesh::redraw() {
 	// Return if line has no width.
 	if(m_width <= 0.0) return;
 
-	// Return if line doesn't have 2 or more points.
-	int64_t num_points = m_points.size();
-	if(num_points < 2) return;
+	// Get simplified points.
+	PackedVector3Array points = _get_simplified_points();
+
+	// Return if line doesn't have 2 or more points (3 or more if line is closed).
+	int64_t num_points = points.size();
+	if(num_points < 2 || (m_closed && num_points < 3)) return;
 
 	// Begin draw.
 	surface_begin(PRIMITIVE_TRIANGLE_STRIP);
 
 	// Get number of segments
-	int64_t num_segments = (m_closed && num_points > 2) ? num_points : num_points - 1;
+	int64_t num_segments = m_closed ? num_points : num_points - 1;
 
 	// Draw segments
 	for (int64_t i = 0; i < num_points; i++) {
-		Vector3 p_current = _transform_position(m_points[i % num_points]);
+		Vector3 p_current = _transform_position(points[i % num_points]);
 		Vector3 p_next = m_closed || i < num_points - 1 ?
-			_transform_position(m_points[(i + 1) % num_points]) :
+			_transform_position(points[(i + 1) % num_points]) :
 			p_current;
 		Vector3 p_prev = m_closed || i != 0 ?
-			_transform_position(m_points[(num_points + i - 1) % num_points]) :
+			_transform_position(points[(num_points + i - 1) % num_points]) :
 			p_current;
 
 		Vector3 alignment = _get_position_alignment(p_current);

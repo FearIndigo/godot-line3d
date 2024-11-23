@@ -34,6 +34,7 @@ private:
 protected:
 	static void _bind_methods();
 
+	PackedVector3Array _douglas_peucker(const PackedVector3Array &p_points, double p_epsilon) const;
 	Vector3 _get_position_alignment(const Vector3 &p_position) const;
 	PackedVector3Array _get_simplified_points() const;
 	Vector3 _transform_direction(const Vector3 &p_local_direction) const;

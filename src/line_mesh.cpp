@@ -238,6 +238,10 @@ void LineMesh::set_transform(const Transform3D &p_transform) {
 
 #pragma region helper_methods
 
+PackedVector3Array LineMesh::_douglas_peucker(const PackedVector3Array &p_points, double p_epsilon) const {
+	return p_points;
+}
+
 Vector3 LineMesh::_get_position_alignment(const Vector3 &p_position) const {
 	return m_alignment == ALIGN_TO_NORMAL ?
 		_transform_direction(m_normal).normalized() :
@@ -247,7 +251,7 @@ Vector3 LineMesh::_get_position_alignment(const Vector3 &p_position) const {
 PackedVector3Array LineMesh::_get_simplified_points() const {
 	// Only perform simplification if tolerance is greater than 0.
 	if (!m_simplify || m_tolerance <= 0) return m_points;
-	return m_points;
+	return _douglas_peucker(m_points, m_tolerance);
 }
 
 Vector3 LineMesh::_transform_direction(const Vector3 &p_local_direction) const {

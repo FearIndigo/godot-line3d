@@ -180,6 +180,9 @@ godot.creator.*
 /.vs
 /.vscode
 
+# Jetbrains IDE
+.idea
+
 # Visual Studio Code workspace file
 *.code-workspace
 

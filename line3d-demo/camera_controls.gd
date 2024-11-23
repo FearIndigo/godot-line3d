@@ -3,6 +3,7 @@ class_name CameraControls
 extends Camera3D
 
 @export var move_speed: float = 5.0;
+@export var boost_percent: float = 2.0;
 @export var look_speed: float = 0.5;
 @export var max_look_angles: Vector2 = Vector2(-80, 80);
 var look_dir: Vector3
@@ -22,6 +23,10 @@ func _process(delta: float) -> void:
 	
 	# Translation
 	var move_dir: Vector3
+	if(Input.is_key_pressed(KEY_Q)):
+		move_dir.y += 1
+	if(Input.is_key_pressed(KEY_E)):
+		move_dir.y -= 1
 	if(Input.is_key_pressed(KEY_W)):
 		move_dir.z -= 1
 	if(Input.is_key_pressed(KEY_S)):
@@ -30,4 +35,10 @@ func _process(delta: float) -> void:
 		move_dir.x -= 1
 	if(Input.is_key_pressed(KEY_D)):
 		move_dir.x += 1
-	translate_object_local(move_speed * delta * move_dir)
+	
+	# Speed
+	var speed: float = move_speed
+	if(Input.is_key_pressed(KEY_SHIFT)):
+		speed *= boost_percent
+	
+	translate_object_local(speed * delta * move_dir)

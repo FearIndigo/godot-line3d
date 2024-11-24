@@ -28,7 +28,7 @@ void Line3D::_bind_methods() {
 
 	ClassDB::bind_method(D_METHOD("set_tolerance", "tolerance"), &Line3D::set_tolerance);
 	ClassDB::bind_method(D_METHOD("get_tolerance"), &Line3D::get_tolerance);
-	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "tolerance", PROPERTY_HINT_RANGE, "0,10,,or_greater"), "set_tolerance", "get_tolerance");
+	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "tolerance", PROPERTY_HINT_RANGE, "0,5,,or_greater"), "set_tolerance", "get_tolerance");
 
 	ClassDB::bind_method(D_METHOD("set_closed", "closed"), &Line3D::set_closed);
 	ClassDB::bind_method(D_METHOD("get_closed"), &Line3D::get_closed);

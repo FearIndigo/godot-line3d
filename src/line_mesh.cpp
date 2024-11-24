@@ -330,7 +330,7 @@ void LineMesh::redraw() {
 	int64_t num_segments = m_closed ? num_points : num_points - 1;
 
 	// Draw segments
-	for (int64_t i = 0; i < num_segments; i++) {
+	for (int64_t i = 0; i <= num_segments; i++) {
 		Vector3 current_point = _transform_position(points[i % num_points]);
 		Vector3 next_point = m_closed || i < num_points - 1 ?
 			_transform_position(points[(i + 1) % num_points]) :

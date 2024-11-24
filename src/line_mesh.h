@@ -1,5 +1,5 @@
-#ifndef LINE3D_MESH_H
-#define LINE3D_MESH_H
+#ifndef LINE_MESH_H
+#define LINE_MESH_H
 
 #include <godot_cpp/classes/immediate_mesh.hpp>
 #include <godot_cpp/classes/curve.hpp>
@@ -92,4 +92,4 @@ public:
 
 VARIANT_ENUM_CAST(LineMesh::LineAlignment);
 
-#endif // LINE3D_MESH_H
+#endif // LINE_MESH_H

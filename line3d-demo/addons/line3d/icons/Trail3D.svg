@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16">
+  <defs>
+    <linearGradient id="gradient-0">
+      <stop offset="0.15" style="stop-color: #fc7f7f"></stop>
+      <stop offset="1" style="stop-color: #fc7f7f; stop-opacity: 0.2;"></stop>
+    </linearGradient>
+  </defs>
+  <path fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m2 9 3 4L8 3l3 6 3-2" style="stroke: url(#gradient-0);"></path>
+</svg>

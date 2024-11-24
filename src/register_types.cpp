@@ -1,7 +1,8 @@
 #include "register_types.h"
 
-#include "line3d.h"
 #include "line_mesh.h"
+#include "line3d.h"
+#include "trail3d.h"
 
 #include <gdextension_interface.h>
 #include <godot_cpp/core/defs.hpp>
@@ -14,8 +15,9 @@ void initialize_line3d_module(ModuleInitializationLevel p_level) {
 		return;
 	}
 
-	GDREGISTER_CLASS(Line3D);
 	GDREGISTER_CLASS(LineMesh);
+	GDREGISTER_CLASS(Line3D);
+	GDREGISTER_CLASS(Trail3D);
 }
 
 void uninitialize_line3d_module(ModuleInitializationLevel p_level) {

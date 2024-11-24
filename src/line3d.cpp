@@ -22,6 +22,14 @@ void Line3D::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("set_points", "points"), &Line3D::set_points);
 	ADD_PROPERTY(PropertyInfo(Variant::PACKED_VECTOR3_ARRAY, "points"), "set_points", "get_points");
 
+	ClassDB::bind_method(D_METHOD("set_simplify", "simplify"), &Line3D::set_simplify);
+	ClassDB::bind_method(D_METHOD("get_simplify"), &Line3D::get_simplify);
+	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "simplify"), "set_simplify", "get_simplify");
+
+	ClassDB::bind_method(D_METHOD("set_tolerance", "tolerance"), &Line3D::set_tolerance);
+	ClassDB::bind_method(D_METHOD("get_tolerance"), &Line3D::get_tolerance);
+	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "tolerance", PROPERTY_HINT_RANGE, "0,10,,or_greater"), "set_tolerance", "get_tolerance");
+
 	ClassDB::bind_method(D_METHOD("set_closed", "closed"), &Line3D::set_closed);
 	ClassDB::bind_method(D_METHOD("get_closed"), &Line3D::get_closed);
 	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "closed"), "set_closed", "get_closed");
@@ -105,6 +113,32 @@ void Line3D::set_point_position(int64_t p_index, const Vector3 &p_position) {
 
 void Line3D::set_points(const PackedVector3Array &p_points) {
 	m_mesh->set_points(p_points);
+	m_is_dirty = true;
+}
+
+#pragma endregion
+
+#pragma region m_simplify
+
+bool Line3D::get_simplify() const {
+	return m_mesh->get_simplify();
+}
+
+void Line3D::set_simplify(bool p_simplify) {
+	m_mesh->set_simplify(p_simplify);
+	m_is_dirty = true;
+}
+
+#pragma endregion
+
+#pragma region m_tolerance
+
+double Line3D::get_tolerance() const {
+	return m_mesh->get_tolerance();
+}
+
+void Line3D::set_tolerance(double p_tolerance) {
+	m_mesh->set_tolerance(p_tolerance);
 	m_is_dirty = true;
 }
 

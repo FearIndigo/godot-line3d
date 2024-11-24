@@ -18,6 +18,8 @@ public:
 
 private:
 	PackedVector3Array m_points = {Vector3(0, 0, 0), Vector3(0, 1, 0)};
+	bool m_simplify = true;
+	double m_tolerance = 0.02;
 	bool m_closed = false;
 	double m_width = 0.2;
 	Ref<Curve> m_width_curve;
@@ -32,13 +34,15 @@ private:
 protected:
 	static void _bind_methods();
 
-	Vector3 _transform_position(const Vector3 &p_local_position) const;
-	Vector3 _transform_direction(const Vector3 &p_local_direction) const;
+	PackedVector3Array _douglas_peucker(const PackedVector3Array &p_points, double p_epsilon) const;
 	Vector3 _get_position_alignment(const Vector3 &p_position) const;
+	PackedVector3Array _get_simplified_points() const;
+	Vector3 _transform_direction(const Vector3 &p_local_direction) const;
+	Vector3 _transform_position(const Vector3 &p_local_position) const;
 
 public:
 	LineMesh();
-	~LineMesh();
+	~LineMesh(); 
 
 	void add_point(const Vector3 &p_position, int64_t p_index = -1);
 	void clear_points();
@@ -47,6 +51,12 @@ public:
 	void remove_point(int64_t p_index);
 	void set_point_position(int64_t p_index, const Vector3 &p_position);
 	void set_points(const PackedVector3Array &p_points);
+
+	bool get_simplify() const;
+	void set_simplify(bool p_simplify);
+
+	double get_tolerance() const;
+	void set_tolerance(double p_tolerance);
 
 	bool get_closed() const;
 	void set_closed(bool p_closed);

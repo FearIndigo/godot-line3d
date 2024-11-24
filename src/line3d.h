@@ -42,6 +42,12 @@ public:
 	void set_point_position(int64_t p_index, const Vector3 &p_position);
 	void set_points(const PackedVector3Array &p_points);
 
+	bool get_simplify() const;
+	void set_simplify(bool p_simplify);
+
+	double get_tolerance() const;
+	void set_tolerance(double p_tolerance);
+
 	bool get_closed() const;
 	void set_closed(bool p_closed);
 

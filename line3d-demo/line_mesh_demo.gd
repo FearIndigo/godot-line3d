@@ -9,10 +9,10 @@ extends MeshInstance3D
 @export var magnitude: float = 0.5
 var time: float = 0.0
 
-func _init() -> void:
+func _ready() -> void:
 	mesh.clear_points()
 	for i in range(num_points):
-		mesh.add_point(Vector3(0, float(i) / num_points * line_length, 0))
+		mesh.add_point(Vector3(0, float(i) / (num_points - 1) * line_length, 0))
 
 func _process(delta: float) -> void:
 	for i in range(mesh.points.size()):

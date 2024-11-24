@@ -9,10 +9,10 @@ extends Line3D
 @export var magnitude: float = 0.5
 var time: float = 0.0
 
-func _init() -> void:
+func _ready() -> void:
 	clear_points()
 	for i in range(num_points):
-		add_point(Vector3(0, float(i) / num_points * line_length, 0))
+		add_point(Vector3(0, float(i) / (num_points - 1) * line_length, 0))
 
 func _process(delta: float) -> void:
 	for i in range(points.size()):

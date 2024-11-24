@@ -11,6 +11,9 @@ class Trail3D : public Line3D {
 public:
 
 private:
+	double m_lifetime = 1.0;
+	double m_min_vertex_distance = 0.1;
+	bool m_emmitting = true;
 
 protected:
 	static void _bind_methods();
@@ -21,6 +24,15 @@ public:
 	~Trail3D();
 
 	void _process(double delta) override {};
+
+	double get_lifetime() const;
+	void set_lifetime(double p_lifetime);
+
+	double get_min_vertex_distance() const;
+	void set_min_vertex_distance(double p_min_vertex_distance);
+
+	bool get_emitting() const;
+	void set_emitting(bool p_emitting);
 };
 
 } // namespace godot

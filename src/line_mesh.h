@@ -19,7 +19,7 @@ public:
 private:
 	PackedVector3Array m_points = {Vector3(0, 0, 0), Vector3(0, 1, 0)};
 	bool m_simplify = true;
-	double m_tolerance = 1.0;
+	double m_tolerance = 0.02;
 	bool m_closed = false;
 	double m_width = 0.2;
 	Ref<Curve> m_width_curve;

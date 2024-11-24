@@ -239,7 +239,48 @@ void LineMesh::set_transform(const Transform3D &p_transform) {
 #pragma region helper_methods
 
 PackedVector3Array LineMesh::_douglas_peucker(const PackedVector3Array &p_points, double p_epsilon) const {
-	return p_points;
+	int64_t num_points = p_points.size();
+	// Require at least 2 points to simplify.
+	if (num_points < 2) return p_points;
+	
+	Vector3 start_point = p_points[0];
+	Vector3 end_point = p_points[num_points - 1];
+	Vector3 start_to_end = end_point - start_point;
+	double distance = start_to_end.length();
+	// Require some distance between start_point and end_point.
+	if(Math::is_zero_approx(distance)) return {start_point};
+
+	// Find the point with the maximum perpendicular distance.
+	double dmax = 0;
+	int64_t index = 0;
+	// Loop points between start and end of array.
+	for (int64_t i = 1; i < num_points - 1; i++) {
+		Vector3 current_point = p_points[i];
+		// Get perpendicular distance between current_point and the line defined from start_point to end_point.
+		Vector3 start_to_current = current_point - start_point;
+		double perpendicular_distance = start_to_current.cross(start_to_end).length() / distance;
+		if (perpendicular_distance > dmax) {
+				index = i;
+				dmax = perpendicular_distance;
+		}
+	}
+
+	PackedVector3Array simplified_points;
+	// If max distance is greater than epsilon, recursively simplify.
+	if (dmax > p_epsilon) {
+		// Recursively simplify line segments before and after the index point.
+		PackedVector3Array rec_results_1 = _douglas_peucker(p_points.slice(0, index + 1), p_epsilon);
+		PackedVector3Array rec_results_2 = _douglas_peucker(p_points.slice(index), p_epsilon);
+		// Combine recursive results, deduplicating the index point.
+		simplified_points = rec_results_1.slice(0, -1);
+		simplified_points.append_array(rec_results_2);
+	} else {
+		// Remove points between start and end of array.
+		simplified_points = {start_point, end_point};
+	}
+
+	// Return the simplified points.
+	return simplified_points;
 }
 
 Vector3 LineMesh::_get_position_alignment(const Vector3 &p_position) const {
@@ -272,13 +313,13 @@ void LineMesh::redraw() {
 	// Clear mesh.
 	clear_surfaces();
 
-	// Return if line has no width.
+	// Require line width.
 	if(m_width <= 0.0) return;
 
 	// Get simplified points.
 	PackedVector3Array points = _get_simplified_points();
 
-	// Return if line doesn't have 2 or more points (3 or more if line is closed).
+	// Require 2 or more points (3 or more if line is closed).
 	int64_t num_points = points.size();
 	if(num_points < 2 || (m_closed && num_points < 3)) return;
 
@@ -290,19 +331,19 @@ void LineMesh::redraw() {
 
 	// Draw segments
 	for (int64_t i = 0; i < num_points; i++) {
-		Vector3 p_current = _transform_position(points[i % num_points]);
-		Vector3 p_next = m_closed || i < num_points - 1 ?
+		Vector3 current_point = _transform_position(points[i % num_points]);
+		Vector3 next_point = m_closed || i < num_points - 1 ?
 			_transform_position(points[(i + 1) % num_points]) :
-			p_current;
-		Vector3 p_prev = m_closed || i != 0 ?
+			current_point;
+		Vector3 previous_point = m_closed || i != 0 ?
 			_transform_position(points[(num_points + i - 1) % num_points]) :
-			p_current;
+			current_point;
 
-		Vector3 alignment = _get_position_alignment(p_current);
+		Vector3 alignment = _get_position_alignment(current_point);
 
-		Vector3 dir_in = p_prev.direction_to(p_current);
+		Vector3 dir_in = previous_point.direction_to(current_point);
 		Vector3 dir_in_tangent = dir_in.slide(alignment);
-		Vector3 dir_out = p_current.direction_to(p_next);
+		Vector3 dir_out = current_point.direction_to(next_point);
 		Vector3 dir_out_tangent = dir_out.slide(alignment);
 		Vector3 dir_avg = dir_in + dir_out;
 		Vector3 dir_avg_tangent = dir_in_tangent + dir_out_tangent;
@@ -317,12 +358,12 @@ void LineMesh::redraw() {
 		surface_set_normal(normal);
 		surface_set_uv(Vector2(0, 1));
 		surface_set_color(m_color);
-		surface_add_vertex(p_current - bitangent);
+		surface_add_vertex(current_point - bitangent);
 
 		surface_set_normal(normal);
 		surface_set_uv(Vector2(1, 1));
 		surface_set_color(m_color);
-		surface_add_vertex(p_current + bitangent);
+		surface_add_vertex(current_point + bitangent);
 	}
 
 	// End drawing.

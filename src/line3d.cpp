@@ -85,12 +85,12 @@ Ref<LineMesh> Line3D::get_mesh() const {
 
 void Line3D::add_point(const Vector3 &p_position, int64_t p_index) {
 	m_mesh->add_point(p_position, p_index);
-	m_is_dirty = true;
+	_is_dirty = true;
 }
 
 void Line3D::clear_points() {
 	m_mesh->clear_points();
-	m_is_dirty = true;
+	_is_dirty = true;
 }
 
 Vector3 Line3D::get_point_position(int64_t p_index) const {
@@ -103,17 +103,17 @@ PackedVector3Array Line3D::get_points() const {
 
 void Line3D::remove_point(int64_t p_index) {
 	m_mesh->remove_point(p_index);
-	m_is_dirty = true;
+	_is_dirty = true;
 }
 
 void Line3D::set_point_position(int64_t p_index, const Vector3 &p_position) {
 	m_mesh->set_point_position(p_index, p_position);
-	m_is_dirty = true;
+	_is_dirty = true;
 }
 
 void Line3D::set_points(const PackedVector3Array &p_points) {
 	m_mesh->set_points(p_points);
-	m_is_dirty = true;
+	_is_dirty = true;
 }
 
 #pragma endregion
@@ -126,7 +126,7 @@ bool Line3D::get_simplify() const {
 
 void Line3D::set_simplify(bool p_simplify) {
 	m_mesh->set_simplify(p_simplify);
-	m_is_dirty = true;
+	_is_dirty = true;
 }
 
 #pragma endregion
@@ -139,7 +139,7 @@ double Line3D::get_tolerance() const {
 
 void Line3D::set_tolerance(double p_tolerance) {
 	m_mesh->set_tolerance(p_tolerance);
-	m_is_dirty = true;
+	_is_dirty = true;
 }
 
 #pragma endregion
@@ -152,7 +152,7 @@ bool Line3D::get_closed() const {
 
 void Line3D::set_closed(bool p_closed) {
 	m_mesh->set_closed(p_closed);
-	m_is_dirty = true;
+	_is_dirty = true;
 }
 
 #pragma endregion
@@ -165,7 +165,7 @@ double Line3D::get_width() const {
 
 void Line3D::set_width(double p_width) {
 	m_mesh->set_width(p_width);
-	m_is_dirty = true;
+	_is_dirty = true;
 }
 
 #pragma endregion
@@ -178,7 +178,7 @@ Ref<Curve> Line3D::get_width_curve() const {
 
 void Line3D::set_width_curve(const Ref<Curve> &p_width_curve) {
 	m_mesh->set_width_curve(p_width_curve);
-	m_is_dirty = true;
+	_is_dirty = true;
 }
 
 #pragma endregion
@@ -191,7 +191,7 @@ Color Line3D::get_color() const {
 
 void Line3D::set_color(const Color &p_color) {
 	m_mesh->set_color(p_color);
-	m_is_dirty = true;
+	_is_dirty = true;
 }
 
 #pragma endregion
@@ -204,7 +204,7 @@ Ref<Gradient> Line3D::get_gradient() const {
 
 void Line3D::set_gradient(const Ref<Gradient> &p_gradient) {
 	m_mesh->set_gradient(p_gradient);
-	m_is_dirty = true;
+	_is_dirty = true;
 }
 
 #pragma endregion
@@ -225,7 +225,7 @@ void Line3D::set_alignment(Line3D::LineAlignment p_alignment) {
   	case ALIGN_TO_NORMAL:
     	m_mesh->set_alignment(LineMesh::LineAlignment::ALIGN_TO_NORMAL);
 	}
-	m_is_dirty = true;
+	_is_dirty = true;
 }
 
 #pragma endregion
@@ -237,7 +237,7 @@ Vector3 Line3D::get_normal() const {
 }
 void Line3D::set_normal(const Vector3 &p_normal) {
 	m_mesh->set_normal(p_normal);
-	m_is_dirty = true;
+	_is_dirty = true;
 }
 
 #pragma endregion
@@ -250,7 +250,7 @@ bool Line3D::get_use_global_space() const {
 
 void Line3D::set_use_global_space(bool p_use_global_space) {
 	m_mesh->set_use_transform(p_use_global_space);
-	m_is_dirty = true;
+	_is_dirty = true;
 }
 
 #pragma endregion
@@ -263,7 +263,7 @@ Transform3D Line3D::get_mesh_transform() const {
 
 void Line3D::set_mesh_transform(const Transform3D &p_transform) {
 	m_mesh->set_transform(p_transform);
-	m_is_dirty = true;
+	_is_dirty = true;
 }
 
 #pragma endregion
@@ -291,9 +291,9 @@ void Line3D::_notification(int p_what) {
 		}
 
 		// Redraw mesh.
-		if(m_is_dirty) {
+		if(_is_dirty) {
 			m_mesh->redraw();
-			m_is_dirty = false;
+			_is_dirty = false;
 		}
 	}
 }

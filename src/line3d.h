@@ -19,12 +19,13 @@ public:
 
 private:
 	Ref<LineMesh> m_mesh;
-	bool m_is_dirty = false;
 	Line3D::LineAlignment m_alignment = ALIGN_TO_NORMAL;
 
 protected:
 	static void _bind_methods();
 	void _notification(int p_what);
+
+	bool _is_dirty = false;
 
 public:
 	Line3D();

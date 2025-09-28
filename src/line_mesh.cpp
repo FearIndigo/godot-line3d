@@ -216,12 +216,12 @@ void LineMesh::set_gradient(const Ref<Gradient> &p_gradient)
 
 #pragma region m_alignment
 
-LineMesh::LineAlignment LineMesh::get_alignment() const
+LineMesh::FaceAlignment LineMesh::get_alignment() const
 {
 	return m_alignment;
 }
 
-void LineMesh::set_alignment(LineMesh::LineAlignment p_alignment)
+void LineMesh::set_alignment(LineMesh::FaceAlignment p_alignment)
 {
 	m_alignment = p_alignment;
 }

@@ -13,7 +13,7 @@ namespace godot
 		GDCLASS(LineMesh, ImmediateMesh)
 
 	public:
-		enum LineAlignment
+		enum FaceAlignment
 		{
 			FACE_TOWARD_POSITION,
 			ALIGN_TO_NORMAL,
@@ -28,7 +28,7 @@ namespace godot
 		Ref<Curve> m_width_curve;
 		Color m_color = Color(1, 1, 1, 1);
 		Ref<Gradient> m_gradient;
-		LineMesh::LineAlignment m_alignment = ALIGN_TO_NORMAL;
+		LineMesh::FaceAlignment m_alignment = ALIGN_TO_NORMAL;
 		Vector3 m_normal = Vector3(0, 0, 1);
 		bool m_use_transform = false;
 		Transform3D m_transform;
@@ -76,8 +76,8 @@ namespace godot
 		Ref<Gradient> get_gradient() const;
 		void set_gradient(const Ref<Gradient> &p_gradient);
 
-		LineMesh::LineAlignment get_alignment() const;
-		void set_alignment(LineMesh::LineAlignment p_alignment);
+		LineMesh::FaceAlignment get_alignment() const;
+		void set_alignment(LineMesh::FaceAlignment p_alignment);
 
 		Vector3 get_normal() const;
 		void set_normal(const Vector3 &p_normal);
@@ -93,6 +93,6 @@ namespace godot
 
 } // namespace godot
 
-VARIANT_ENUM_CAST(LineMesh::LineAlignment);
+VARIANT_ENUM_CAST(LineMesh::FaceAlignment);
 
 #endif // LINE_MESH_H

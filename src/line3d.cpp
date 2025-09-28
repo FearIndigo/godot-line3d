@@ -248,10 +248,10 @@ void Line3D::set_alignment(Line3D::LineAlignment p_alignment)
 	{
 	case ALIGN_TO_VIEW:
 	case FACE_TOWARD_POSITION:
-		m_mesh->set_alignment(LineMesh::LineAlignment::FACE_TOWARD_POSITION);
+		m_mesh->set_alignment(LineMesh::FaceAlignment::FACE_TOWARD_POSITION);
 		break;
 	case ALIGN_TO_NORMAL:
-		m_mesh->set_alignment(LineMesh::LineAlignment::ALIGN_TO_NORMAL);
+		m_mesh->set_alignment(LineMesh::FaceAlignment::ALIGN_TO_NORMAL);
 	}
 	_is_dirty = true;
 }

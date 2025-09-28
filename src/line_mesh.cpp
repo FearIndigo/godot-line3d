@@ -4,7 +4,8 @@
 
 using namespace godot;
 
-void LineMesh::_bind_methods() {
+void LineMesh::_bind_methods()
+{
 	BIND_ENUM_CONSTANT(FACE_TOWARD_POSITION);
 	BIND_ENUM_CONSTANT(ALIGN_TO_NORMAL);
 
@@ -62,43 +63,54 @@ void LineMesh::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("redraw"), &LineMesh::redraw);
 }
 
-LineMesh::LineMesh() {
+LineMesh::LineMesh()
+{
 	// Initialize any variables here.
 	redraw();
 }
 
-LineMesh::~LineMesh() {
+LineMesh::~LineMesh()
+{
 	// Add your cleanup here.
 }
 
 #pragma region m_points
 
-void LineMesh::add_point(const Vector3 &p_position, int64_t p_index) {
-	if(p_index == -1) m_points.push_back(p_position);
-	else m_points.insert(p_index, p_position);
+void LineMesh::add_point(const Vector3 &p_position, int64_t p_index)
+{
+	if (p_index == -1)
+		m_points.push_back(p_position);
+	else
+		m_points.insert(p_index, p_position);
 }
 
-void LineMesh::clear_points() {
+void LineMesh::clear_points()
+{
 	m_points.clear();
 }
 
-Vector3 LineMesh::get_point_position(int64_t p_index) const {
+Vector3 LineMesh::get_point_position(int64_t p_index) const
+{
 	return m_points[p_index];
 }
 
-PackedVector3Array LineMesh::get_points() const {
+PackedVector3Array LineMesh::get_points() const
+{
 	return m_points;
 }
 
-void LineMesh::remove_point(int64_t p_index) {
+void LineMesh::remove_point(int64_t p_index)
+{
 	m_points.remove_at(p_index);
 }
 
-void LineMesh::set_point_position(int64_t p_index, const Vector3 &p_position) {
+void LineMesh::set_point_position(int64_t p_index, const Vector3 &p_position)
+{
 	m_points.set(p_index, p_position);
 }
 
-void LineMesh::set_points(const PackedVector3Array &p_points) {
+void LineMesh::set_points(const PackedVector3Array &p_points)
+{
 	m_points = p_points;
 }
 
@@ -106,11 +118,13 @@ void LineMesh::set_points(const PackedVector3Array &p_points) {
 
 #pragma region m_simplify
 
-bool LineMesh::get_simplify() const {
+bool LineMesh::get_simplify() const
+{
 	return m_simplify;
 }
 
-void LineMesh::set_simplify(bool p_simplify) {
+void LineMesh::set_simplify(bool p_simplify)
+{
 	m_simplify = p_simplify;
 }
 
@@ -118,11 +132,13 @@ void LineMesh::set_simplify(bool p_simplify) {
 
 #pragma region m_tolerance
 
-double LineMesh::get_tolerance() const {
+double LineMesh::get_tolerance() const
+{
 	return m_tolerance;
 }
 
-void LineMesh::set_tolerance(double p_tolerance) {
+void LineMesh::set_tolerance(double p_tolerance)
+{
 	m_tolerance = p_tolerance;
 }
 
@@ -130,11 +146,13 @@ void LineMesh::set_tolerance(double p_tolerance) {
 
 #pragma region m_closed
 
-bool LineMesh::get_closed() const {
+bool LineMesh::get_closed() const
+{
 	return m_closed;
 }
 
-void LineMesh::set_closed(bool p_closed) {
+void LineMesh::set_closed(bool p_closed)
+{
 	m_closed = p_closed;
 }
 
@@ -142,11 +160,13 @@ void LineMesh::set_closed(bool p_closed) {
 
 #pragma region m_width
 
-double LineMesh::get_width() const {
+double LineMesh::get_width() const
+{
 	return m_width;
 }
 
-void LineMesh::set_width(double p_width) {
+void LineMesh::set_width(double p_width)
+{
 	m_width = p_width;
 }
 
@@ -154,11 +174,13 @@ void LineMesh::set_width(double p_width) {
 
 #pragma region m_width_curve
 
-Ref<Curve> LineMesh::get_width_curve() const {
+Ref<Curve> LineMesh::get_width_curve() const
+{
 	return m_width_curve;
 }
 
-void LineMesh::set_width_curve(const Ref<Curve> &p_width_curve) {
+void LineMesh::set_width_curve(const Ref<Curve> &p_width_curve)
+{
 	m_width_curve = p_width_curve;
 }
 
@@ -166,11 +188,13 @@ void LineMesh::set_width_curve(const Ref<Curve> &p_width_curve) {
 
 #pragma region m_color
 
-Color LineMesh::get_color() const {
+Color LineMesh::get_color() const
+{
 	return m_color;
 }
 
-void LineMesh::set_color(const Color &p_color) {
+void LineMesh::set_color(const Color &p_color)
+{
 	m_color = p_color;
 }
 
@@ -178,11 +202,13 @@ void LineMesh::set_color(const Color &p_color) {
 
 #pragma region m_gradient
 
-Ref<Gradient> LineMesh::get_gradient() const {
+Ref<Gradient> LineMesh::get_gradient() const
+{
 	return m_gradient;
 }
 
-void LineMesh::set_gradient(const Ref<Gradient> &p_gradient) {
+void LineMesh::set_gradient(const Ref<Gradient> &p_gradient)
+{
 	m_gradient = p_gradient;
 }
 
@@ -190,11 +216,13 @@ void LineMesh::set_gradient(const Ref<Gradient> &p_gradient) {
 
 #pragma region m_alignment
 
-LineMesh::LineAlignment LineMesh::get_alignment() const {
+LineMesh::LineAlignment LineMesh::get_alignment() const
+{
 	return m_alignment;
 }
 
-void LineMesh::set_alignment(LineMesh::LineAlignment p_alignment) {
+void LineMesh::set_alignment(LineMesh::LineAlignment p_alignment)
+{
 	m_alignment = p_alignment;
 }
 
@@ -202,10 +230,12 @@ void LineMesh::set_alignment(LineMesh::LineAlignment p_alignment) {
 
 #pragma region m_normal
 
-Vector3 LineMesh::get_normal() const {
+Vector3 LineMesh::get_normal() const
+{
 	return m_normal;
 }
-void LineMesh::set_normal(const Vector3 &p_normal) {
+void LineMesh::set_normal(const Vector3 &p_normal)
+{
 	m_normal = p_normal;
 }
 
@@ -213,11 +243,13 @@ void LineMesh::set_normal(const Vector3 &p_normal) {
 
 #pragma region m_use_transform
 
-bool LineMesh::get_use_transform() const {
+bool LineMesh::get_use_transform() const
+{
 	return m_use_transform;
 }
 
-void LineMesh::set_use_transform(bool p_use_transform) {
+void LineMesh::set_use_transform(bool p_use_transform)
+{
 	m_use_transform = p_use_transform;
 }
 
@@ -225,11 +257,13 @@ void LineMesh::set_use_transform(bool p_use_transform) {
 
 #pragma region m_transform
 
-Transform3D LineMesh::get_transform() const {
+Transform3D LineMesh::get_transform() const
+{
 	return m_transform;
 }
 
-void LineMesh::set_transform(const Transform3D &p_transform) {
+void LineMesh::set_transform(const Transform3D &p_transform)
+{
 	m_transform = p_transform;
 	m_inverse_transform = m_transform.inverse();
 }
@@ -238,43 +272,51 @@ void LineMesh::set_transform(const Transform3D &p_transform) {
 
 #pragma region helper_methods
 
-PackedVector3Array LineMesh::_douglas_peucker(const PackedVector3Array &p_points, double p_epsilon) const {
+PackedVector3Array LineMesh::_douglas_peucker(const PackedVector3Array &p_points, double p_epsilon) const
+{
 	int64_t num_points = p_points.size();
 	// Require at least 2 points to simplify.
-	if (num_points < 2) return p_points;
-	
+	if (num_points < 2)
+		return p_points;
+
 	Vector3 start_point = p_points[0];
 	Vector3 end_point = p_points[num_points - 1];
 	Vector3 start_to_end = end_point - start_point;
 	double distance = start_to_end.length();
 	// Require some distance between start_point and end_point.
-	if(Math::is_zero_approx(distance)) return {start_point};
+	if (Math::is_zero_approx(distance))
+		return {start_point};
 
 	// Find the point with the maximum perpendicular distance.
 	double dmax = 0;
 	int64_t index = 0;
 	// Loop points between start and end of array.
-	for (int64_t i = 1; i < num_points - 1; i++) {
+	for (int64_t i = 1; i < num_points - 1; i++)
+	{
 		Vector3 current_point = p_points[i];
 		// Get perpendicular distance between current_point and the line defined from start_point to end_point.
 		Vector3 start_to_current = current_point - start_point;
 		double perpendicular_distance = start_to_current.cross(start_to_end).length() / distance;
-		if (perpendicular_distance > dmax) {
-				index = i;
-				dmax = perpendicular_distance;
+		if (perpendicular_distance > dmax)
+		{
+			index = i;
+			dmax = perpendicular_distance;
 		}
 	}
 
 	PackedVector3Array simplified_points;
 	// If max distance is greater than epsilon, recursively simplify.
-	if (dmax > p_epsilon) {
+	if (dmax > p_epsilon)
+	{
 		// Recursively simplify line segments before and after the index point.
 		PackedVector3Array rec_results_1 = _douglas_peucker(p_points.slice(0, index + 1), p_epsilon);
 		PackedVector3Array rec_results_2 = _douglas_peucker(p_points.slice(index), p_epsilon);
 		// Combine recursive results, deduplicating the index point.
 		simplified_points = rec_results_1.slice(0, -1);
 		simplified_points.append_array(rec_results_2);
-	} else {
+	}
+	else
+	{
 		// Remove points between start and end of array.
 		simplified_points = {start_point, end_point};
 	}
@@ -283,45 +325,47 @@ PackedVector3Array LineMesh::_douglas_peucker(const PackedVector3Array &p_points
 	return simplified_points;
 }
 
-Vector3 LineMesh::_get_position_alignment(const Vector3 &p_position) const {
-	return m_alignment == ALIGN_TO_NORMAL ?
-		_transform_direction(m_normal).normalized() :
-		p_position.direction_to(_transform_position(m_normal));
+Vector3 LineMesh::_get_position_alignment(const Vector3 &p_position) const
+{
+	return m_alignment == ALIGN_TO_NORMAL ? _transform_direction(m_normal).normalized() : p_position.direction_to(_transform_position(m_normal));
 }
 
-PackedVector3Array LineMesh::_get_simplified_points() const {
+PackedVector3Array LineMesh::_get_simplified_points() const
+{
 	// Only perform simplification if tolerance is greater than 0.
-	if (!m_simplify || m_tolerance <= 0) return m_points;
+	if (!m_simplify || m_tolerance <= 0)
+		return m_points;
 	return _douglas_peucker(m_points, m_tolerance);
 }
 
-Vector3 LineMesh::_transform_direction(const Vector3 &p_local_direction) const {
-	return m_use_transform ?
-		m_inverse_transform.basis.xform(p_local_direction) :
-		p_local_direction;
+Vector3 LineMesh::_transform_direction(const Vector3 &p_local_direction) const
+{
+	return m_use_transform ? m_inverse_transform.basis.xform(p_local_direction) : p_local_direction;
 }
 
-Vector3 LineMesh::_transform_position(const Vector3 &p_local_position) const {
-	return m_use_transform ?
-		m_inverse_transform.xform(p_local_position) :
-		p_local_position;
+Vector3 LineMesh::_transform_position(const Vector3 &p_local_position) const
+{
+	return m_use_transform ? m_inverse_transform.xform(p_local_position) : p_local_position;
 }
 
 #pragma endregion
 
-void LineMesh::redraw() {
+void LineMesh::redraw()
+{
 	// Clear mesh.
 	clear_surfaces();
 
 	// Require line width.
-	if(m_width <= 0.0) return;
+	if (m_width <= 0.0)
+		return;
 
 	// Get simplified points.
 	PackedVector3Array points = _get_simplified_points();
 
 	// Require 2 or more points (3 or more if line is closed).
 	int64_t num_points = points.size();
-	if(num_points < 2 || (m_closed && num_points < 3)) return;
+	if (num_points < 2 || (m_closed && num_points < 3))
+		return;
 
 	// Begin draw.
 	surface_begin(PRIMITIVE_TRIANGLE_STRIP);
@@ -330,14 +374,11 @@ void LineMesh::redraw() {
 	int64_t num_segments = m_closed ? num_points : num_points - 1;
 
 	// Draw segments
-	for (int64_t i = 0; i <= num_segments; i++) {
+	for (int64_t i = 0; i <= num_segments; i++)
+	{
 		Vector3 current_point = _transform_position(points[i % num_points]);
-		Vector3 next_point = m_closed || i < num_points - 1 ?
-			_transform_position(points[(i + 1) % num_points]) :
-			current_point;
-		Vector3 previous_point = m_closed || i != 0 ?
-			_transform_position(points[(num_points + i - 1) % num_points]) :
-			current_point;
+		Vector3 next_point = m_closed || i < num_points - 1 ? _transform_position(points[(i + 1) % num_points]) : current_point;
+		Vector3 previous_point = m_closed || i != 0 ? _transform_position(points[(num_points + i - 1) % num_points]) : current_point;
 
 		Vector3 alignment = _get_position_alignment(current_point);
 

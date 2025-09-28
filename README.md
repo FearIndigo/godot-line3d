@@ -2,7 +2,7 @@
 
 A 3D line renderer for Godot built using GDExtension.
 
-Targets Godot version 4.3.
+Targets Godot version 4.5.
 
 ## Features
 

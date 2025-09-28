@@ -1,10 +1,10 @@
 [gd_scene load_steps=12 format=3 uid="uid://disr5adx5hhtw"]
 
-[ext_resource type="Script" path="res://camera_controls.gd" id="1_ikykm"]
-[ext_resource type="Script" path="res://line3d_demo.gd" id="1_nik3e"]
-[ext_resource type="Script" path="res://line_mesh_demo.gd" id="2_gxolv"]
-[ext_resource type="Script" path="res://fps_counter.gd" id="2_r1cp3"]
-[ext_resource type="Script" path="res://trail3d_demo.gd" id="5_fqkdk"]
+[ext_resource type="Script" uid="uid://br4a26oy5m7i4" path="res://camera_controls.gd" id="1_ikykm"]
+[ext_resource type="Script" uid="uid://bcae4ef020ux4" path="res://line3d_demo.gd" id="1_nik3e"]
+[ext_resource type="Script" uid="uid://dua70ehjhw202" path="res://line_mesh_demo.gd" id="2_gxolv"]
+[ext_resource type="Script" uid="uid://c3ledpq2o1m8y" path="res://fps_counter.gd" id="2_r1cp3"]
+[ext_resource type="Script" uid="uid://b0qvtjjkhlx7b" path="res://trail3d_demo.gd" id="5_fqkdk"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_p4ti3"]
 

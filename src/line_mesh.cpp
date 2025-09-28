@@ -24,7 +24,7 @@ void LineMesh::_bind_methods()
 
 	ClassDB::bind_method(D_METHOD("set_tolerance", "tolerance"), &LineMesh::set_tolerance);
 	ClassDB::bind_method(D_METHOD("get_tolerance"), &LineMesh::get_tolerance);
-	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "tolerance", PROPERTY_HINT_RANGE, "0,5,,or_greater"), "set_tolerance", "get_tolerance");
+	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "tolerance", PROPERTY_HINT_RANGE, "0,2,,or_greater"), "set_tolerance", "get_tolerance");
 
 	ClassDB::bind_method(D_METHOD("set_closed", "closed"), &LineMesh::set_closed);
 	ClassDB::bind_method(D_METHOD("get_closed"), &LineMesh::get_closed);
@@ -394,7 +394,8 @@ void LineMesh::redraw()
 		Vector3 bitangent = alignment.cross(tangent).normalized();
 		Vector3 normal = dir_avg.cross(bitangent).normalized();
 
-		bitangent *= m_width / 2.0 + m_width / 10.0 * (tangent_angle * tangent_angle);
+		// bitangent *= m_width / 2.0 + m_width / 10.0 * (tangent_angle * tangent_angle);
+		bitangent *= m_width / 2.0;
 
 		surface_set_normal(normal);
 		surface_set_uv(Vector2(0, 1));

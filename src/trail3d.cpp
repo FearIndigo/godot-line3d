@@ -21,7 +21,7 @@ void Trail3D::_bind_methods()
 
 	ClassDB::bind_method(D_METHOD("set_tolerance", "tolerance"), &Trail3D::set_tolerance);
 	ClassDB::bind_method(D_METHOD("get_tolerance"), &Trail3D::get_tolerance);
-	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "tolerance", PROPERTY_HINT_RANGE, "0,5,,or_greater"), "set_tolerance", "get_tolerance");
+	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "tolerance", PROPERTY_HINT_RANGE, "0,2,,or_greater"), "set_tolerance", "get_tolerance");
 
 	ClassDB::bind_method(D_METHOD("set_width", "width"), &Trail3D::set_width);
 	ClassDB::bind_method(D_METHOD("get_width"), &Trail3D::get_width);
@@ -288,24 +288,73 @@ void Trail3D::_notification(int p_what)
 			Vector3 current_position = m_mesh->get_transform().origin;
 			if (m_spawn_times.empty() || m_last_emmited_position.distance_to(current_position) >= m_min_vertex_distance)
 			{
-				m_mesh->add_point(current_position, 0);
-				m_spawn_times.push(time);
+				// No points or far enough from last point.
+				if (m_leading_point)
+				{
+					// Use leading point as new point.
+					m_leading_point = false;
+					m_mesh->set_point_position(0, current_position);
+					m_spawn_times.back() = time;
+				}
+				else
+				{
+					// Add new point.
+					m_mesh->add_point(current_position, 0);
+					m_spawn_times.push_back(time);
+				}
 				m_last_emmited_position = current_position;
-				_is_dirty = true;
-			}
-		}
-
-		// Remove old points.
-		while (!m_spawn_times.empty())
-		{
-			if (m_spawn_times.front() + m_lifetime <= time)
-			{
-				m_spawn_times.pop();
-				m_mesh->remove_point(m_spawn_times.size());
 				_is_dirty = true;
 			}
 			else
 			{
+				// Not far enough from last spawned point, update leading point position.
+				if (m_leading_point)
+				{
+					// Update leading point.
+					m_mesh->set_point_position(0, current_position);
+					m_spawn_times.back() = time;
+				}
+				else
+				{
+					// Add leading point.
+					m_leading_point = true;
+					m_mesh->add_point(current_position, 0);
+					m_spawn_times.push_back(time);
+				}
+				_is_dirty = true;
+			}
+		}
+
+		// Remove old points and update trailing point.
+		while (!m_spawn_times.empty())
+		{
+			uint64_t current_expire_time = m_spawn_times[0] + m_lifetime;
+			if (current_expire_time < time)
+			{
+				int64_t num_points = m_mesh->get_points().size();
+				uint64_t next_expire_time = m_spawn_times.size() > 1 ? m_spawn_times[1] + m_lifetime : 0;
+				if (next_expire_time > time)
+				{
+					// Lerp trailing point to next point.
+					uint32_t diff = next_expire_time - current_expire_time;
+					float t = 1.0 - float(next_expire_time - time) / diff;
+					m_spawn_times[0] += diff * t;
+					m_mesh->set_point_position(num_points - 1, m_mesh->get_point_position(num_points - 1).lerp(m_mesh->get_point_position(num_points - 2), t));
+					_is_dirty = true;
+					// Next point not old enough to remove.
+					break;
+				}
+				else
+				{
+					// Remove trailing point.
+					m_spawn_times.pop_front();
+					m_mesh->remove_point(num_points - 1);
+					_is_dirty = true;
+				}
+			}
+			else
+			{
+				// Last point not old enough to remove.
 				break;
 			}
 		}

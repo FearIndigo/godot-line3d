@@ -1,7 +1,7 @@
 #ifndef TRAIL3D_H
 #define TRAIL3D_H
 
-#include <queue>
+#include <deque>
 
 #include <godot_cpp/classes/geometry_instance3d.hpp>
 
@@ -26,10 +26,11 @@ namespace godot
 		Ref<LineMesh> m_mesh;
 		TrailAlignment m_alignment = ALIGN_TO_NORMAL;
 		uint64_t m_lifetime = 1000;
-		double m_min_vertex_distance = 0.2;
+		double m_min_vertex_distance = 0.3;
 		bool m_emmitting = true;
-		std::queue<uint16_t> m_spawn_times;
+		std::deque<uint16_t> m_spawn_times;
 		Vector3 m_last_emmited_position = Vector3(0, 0, 0);
+		bool m_leading_point = false;
 
 	protected:
 		static void _bind_methods();

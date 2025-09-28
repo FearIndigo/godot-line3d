@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<class name="Line3D" inherits="GeometryInstance3D" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/godotengine/godot/master/doc/class.xsd">
+	<brief_description>
+	 A 3D line defined by a series of points.
+	</brief_description>
+	<description>
+	 A 3D line defined by a series of points.
+
+	 Line3D uses a LineMesh to render a line in 3D space. You can customize the appearance of the line using various properties, including width, color, gradient, and alignment.
+
+	 To create a line, add points to the Line3D using the add_point() method or by setting the points property directly. You can also modify existing points using set_point_position().
+
+	 The line can be set to be closed (i.e., the last point connects back to the first point) using the closed property. You can also enable or disable simplification of the line using the simplify property, which removes unnecessary points based on a specified tolerance.
+
+	 The alignment property determines how the line is oriented in 3D space. It can be set to align to the view, face toward a specific position, or align to a specified normal vector.
+
+	 For more advanced usage, you can access and modify the underlying LineMesh directly using the get_mesh() method.
+	</description>
+	<tutorials>
+	</tutorials>
+	<methods>
+		<method name="add_point">
+			<return type="void" />
+			<param index="0" name="position" type="Vector3" />
+			<param index="1" name="index" type="int" default="-1" />
+			<description>
+			 Adds a point to the line at the specified position. If index is -1, the point is added at the end of the line.
+			</description>
+		</method>
+		<method name="clear_points">
+			<return type="void" />
+			<description>
+			 Removes all points from the line.
+			</description>
+		</method>
+		<method name="get_mesh" qualifiers="const">
+			<return type="LineMesh" />
+			<description>
+			 Returns the LineMesh used to render the line.
+			 You can use this to access and modify the mesh directly for advanced usage.
+			 Note: that changes to the mesh may be overwritten by changes to the Line3D properties or points.
+			</description>
+		</method>
+		<method name="get_point_position" qualifiers="const">
+			<return type="Vector3" />
+			<param index="0" name="index" type="int" />
+			<description>
+			 Returns the position of the point at the specified index.
+			</description>
+		</method>
+		<method name="remove_point">
+			<return type="void" />
+			<param index="0" name="index" type="int" />
+			<description>
+			 Removes the point at the specified index.
+			 If the index is out of range, an error is raised.
+			</description>
+		</method>
+		<method name="set_dirty">
+			<return type="void" />
+			<description>
+			 Marks the line as dirty, causing it to be redrawn on the next frame.
+			 This is useful if you have made multiple changes to the line and want to update its appearance.
+			 Note that the line is automatically marked as dirty when you modify its properties or points, so you typically do not need to call this method directly.
+			</description>
+		</method>
+		<method name="set_point_position">
+			<return type="void" />
+			<param index="0" name="index" type="int" />
+			<param index="1" name="position" type="Vector3" />
+			<description>
+			 Sets the position of the point at the specified index.
+			 If the index is out of range, an error is raised.
+			</description>
+		</method>
+	</methods>
+	<members>
+		<member name="alignment" type="int" setter="set_alignment" getter="get_alignment" enum="Line3D.LineAlignment" default="2">
+		 Determines how the line is oriented in 3D space.
+		</member>
+		<member name="closed" type="bool" setter="set_closed" getter="get_closed" default="false">
+		 Whether the line is closed (i.e., the last point connects back to the first point).
+		</member>
+		<member name="color" type="Color" setter="set_color" getter="get_color" default="Color(1, 1, 1, 1)">
+		 The base color of the line.
+		</member>
+		<member name="gradient" type="Gradient" setter="set_gradient" getter="get_gradient">
+		 A gradient to apply along the length of the line.
+		</member>
+		<member name="normal" type="Vector3" setter="set_normal" getter="get_normal" default="Vector3(0, 0, 1)">
+		 The normal vector used when alignment is set to ALIGN_TO_NORMAL.
+		</member>
+		<member name="points" type="PackedVector3Array" setter="set_points" getter="get_points" default="PackedVector3Array(0, 0, 0, 0, 1, 0)">
+		 The array of points defining the line.
+		</member>
+		<member name="simplify" type="bool" setter="set_simplify" getter="get_simplify" default="true">
+		 Whether to simplify the line by removing unnecessary points.
+		 This can help improve performance for lines with many points.
+		</member>
+		<member name="tolerance" type="float" setter="set_tolerance" getter="get_tolerance" default="0.02">
+		 The tolerance used when simplifying the line. Higher values result in more aggressive simplification.
+		 Only used if simplify is true.
+		</member>
+		<member name="use_global_space" type="bool" setter="set_use_global_space" getter="get_use_global_space" default="false">
+		 Whether to use global space for the points instead of local space.
+		 When enabled, the points are interpreted in the global coordinate system, meaning they will not move with the Line3D node if it is transformed.
+		 This can be useful for creating lines that remain fixed in the world space regardless of the node's position or rotation.
+		</member>
+		<member name="width" type="float" setter="set_width" getter="get_width" default="0.2">
+		 The width of the line.
+		 This defines how thick the line appears in 3D space.
+		 You can also use the width_curve property to modulate the width along the length of the line.
+		</member>
+		<member name="width_curve" type="Curve" setter="set_width_curve" getter="get_width_curve">
+		 A curve to modulate the width of the line along its length.
+		 The horizontal axis of the curve represents the normalized distance along the line (0.0 at the start, 1.0 at the end), while the vertical axis represents the width multiplier.
+		 For example, a value of 1.0 means the width is unchanged, while a value of 0.5 means the width is halved.
+		 This allows for creating lines that taper or vary in thickness along their length.
+		 If no curve is assigned, the line will have a constant width as defined by the width property.
+		</member>
+	</members>
+	<constants>
+		<constant name="ALIGN_TO_VIEW" value="0" enum="LineAlignment">
+		 Align the line segments to always face the camera.
+		</constant>
+		<constant name="FACE_TOWARD_POSITION" value="1" enum="LineAlignment">
+		 Align the line segments to face toward a specific position in space.
+		</constant>
+		<constant name="ALIGN_TO_NORMAL" value="2" enum="LineAlignment">
+		 Align the line segments to a specified normal vector.
+		</constant>
+	</constants>
+</class>

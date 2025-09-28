@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<class name="Trail3D" inherits="Line3D" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/godotengine/godot/master/doc/class.xsd">
+	<brief_description>
+		A Line3D that automatically adds points to create a trail effect.
+	</brief_description>
+	<description>
+		A Line3D that automatically adds points to create a trail effect.
+
+		Points are added at the position of the Trail3D node every frame, and old points are removed after a certain lifetime. The result is a trail that follows the node as it moves through 3D space.
+
+		To use, simply add a Trail3D node to your scene and set its properties as desired. You can also customize the appearance of the trail by changing the material and width of the Line3D.
+	</description>
+	<tutorials>
+	</tutorials>
+	<members>
+		<member name="emitting" type="bool" setter="set_emitting" getter="get_emitting" default="true">
+			Enable or disable emission of new points.
+		</member>
+		<member name="lifetime" type="float" setter="set_lifetime" getter="get_lifetime" default="1.0">
+			Time in seconds before a point is removed. Set to 0 to disable point removal.
+		</member>
+		<member name="min_vertex_distance" type="float" setter="set_min_vertex_distance" getter="get_min_vertex_distance" default="0.1">
+			Minimum distance between points. If the distance between the last point and the new point is less than this value, the new point is not added.
+		</member>
+	</members>
+</class>

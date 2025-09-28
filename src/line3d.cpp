@@ -12,8 +12,6 @@ void Line3D::_bind_methods()
 	BIND_ENUM_CONSTANT(FACE_TOWARD_POSITION);
 	BIND_ENUM_CONSTANT(ALIGN_TO_NORMAL);
 
-	ClassDB::bind_method(D_METHOD("get_mesh"), &Line3D::get_mesh);
-
 	ClassDB::bind_method(D_METHOD("set_dirty"), &Line3D::set_dirty);
 
 	ClassDB::bind_method(D_METHOD("add_point", "position", "index"), &Line3D::add_point, DEFVAL(-1));
@@ -77,15 +75,6 @@ Line3D::~Line3D()
 {
 	// Add your cleanup here.
 }
-
-#pragma region m_mesh
-
-Ref<LineMesh> Line3D::get_mesh() const
-{
-	return m_mesh;
-}
-
-#pragma endregion
 
 #pragma region _is_dirty
 

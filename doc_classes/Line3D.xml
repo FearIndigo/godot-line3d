@@ -13,8 +13,6 @@
 	 The line can be set to be closed (i.e., the last point connects back to the first point) using the closed property. You can also enable or disable simplification of the line using the simplify property, which removes unnecessary points based on a specified tolerance.
 
 	 The alignment property determines how the line is oriented in 3D space. It can be set to align to the view, face toward a specific position, or align to a specified normal vector.
-
-	 For more advanced usage, you can access and modify the underlying LineMesh directly using the get_mesh() method.
 	</description>
 	<tutorials>
 	</tutorials>
@@ -31,14 +29,6 @@
 			<return type="void" />
 			<description>
 			 Removes all points from the line.
-			</description>
-		</method>
-		<method name="get_mesh" qualifiers="const">
-			<return type="LineMesh" />
-			<description>
-			 Returns the LineMesh used to render the line.
-			 You can use this to access and modify the mesh directly for advanced usage.
-			 Note: that changes to the mesh may be overwritten by changes to the Line3D properties or points.
 			</description>
 		</method>
 		<method name="get_point_position" qualifiers="const">
@@ -61,7 +51,7 @@
 			<description>
 			 Marks the line as dirty, causing it to be redrawn on the next frame.
 			 This is useful if you have made multiple changes to the line and want to update its appearance.
-			 Note that the line is automatically marked as dirty when you modify its properties or points, so you typically do not need to call this method directly.
+			 Note: that the line is automatically marked as dirty when you modify its properties or points, so you typically do not need to call this method directly.
 			</description>
 		</method>
 		<method name="set_point_position">

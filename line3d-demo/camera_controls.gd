@@ -11,10 +11,12 @@ var look_rot: Vector3
 var target_rot: Quaternion
 
 func _ready() -> void:
+	# Use initial rotation as look rotation target
 	look_rot = rotation
 	target_rot = Quaternion.from_euler(look_rot)
 
 func _input(event) -> void:
+	# Update look rotation target
 	if event is InputEventMouseMotion and Input.is_mouse_button_pressed(MOUSE_BUTTON_RIGHT):
 		look_rot.y -= event.relative.x * look_sensitivity
 		look_rot.x -= event.relative.y * look_sensitivity
@@ -24,10 +26,8 @@ func _input(event) -> void:
 func _process(delta: float) -> void:
 	# Mouse mode
 	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED if Input.is_mouse_button_pressed(MOUSE_BUTTON_RIGHT) else Input.MOUSE_MODE_VISIBLE)
-	
 	# Rotation
 	transform.basis = Basis(transform.basis.get_rotation_quaternion().slerp(target_rot, look_smoothing * delta))
-	
 	# Translation
 	var move_dir: Vector3
 	if(Input.is_key_pressed(KEY_Q)):
@@ -43,10 +43,9 @@ func _process(delta: float) -> void:
 	if(Input.is_key_pressed(KEY_D)):
 		move_dir.x += 1
 	move_dir = move_dir.normalized()
-	
 	# Speed
 	var speed: float = move_speed
 	if(Input.is_key_pressed(KEY_SHIFT)):
 		speed *= boost_percent
-	
+	# Move camera based on input
 	translate_object_local(speed * delta * move_dir)

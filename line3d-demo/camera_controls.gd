@@ -22,6 +22,9 @@ func _input(event) -> void:
 		target_rot = Quaternion.from_euler(look_rot)
 
 func _process(delta: float) -> void:
+	# Mouse mode
+	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED if Input.is_mouse_button_pressed(MOUSE_BUTTON_RIGHT) else Input.MOUSE_MODE_VISIBLE)
+	
 	# Rotation
 	transform.basis = Basis(transform.basis.get_rotation_quaternion().slerp(target_rot, look_smoothing * delta))
 	

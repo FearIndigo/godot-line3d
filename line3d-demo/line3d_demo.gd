@@ -10,8 +10,6 @@ extends Line3D
 var time: float = 0.0
 
 func _ready() -> void:
-	# Remove existing points
-	clear_points()
 	# Initialise points array
 	for i in range(num_points):
 		add_point(Vector3(0, float(i) / (num_points - 1) * line_length, 0))

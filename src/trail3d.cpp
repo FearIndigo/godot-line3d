@@ -3,6 +3,7 @@
 #include <godot_cpp/core/class_db.hpp>
 #include <godot_cpp/classes/viewport.hpp>
 #include <godot_cpp/classes/camera3d.hpp>
+#include <godot_cpp/classes/time.hpp>
 
 using namespace godot;
 
@@ -46,13 +47,9 @@ void Trail3D::_bind_methods()
 	ClassDB::bind_method(D_METHOD("get_normal"), &Trail3D::get_normal);
 	ADD_PROPERTY(PropertyInfo(Variant::VECTOR3, "normal"), "set_normal", "get_normal");
 
-	ClassDB::bind_method(D_METHOD("set_use_global_space", "use_global_space"), &Trail3D::set_use_global_space);
-	ClassDB::bind_method(D_METHOD("get_use_global_space"), &Trail3D::get_use_global_space);
-	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "use_global_space"), "set_use_global_space", "get_use_global_space");
-
 	ClassDB::bind_method(D_METHOD("set_lifetime", "lifetime"), &Trail3D::set_lifetime);
 	ClassDB::bind_method(D_METHOD("get_lifetime"), &Trail3D::get_lifetime);
-	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "lifetime", PROPERTY_HINT_RANGE, "0,10,,or_greater"), "set_lifetime", "get_lifetime");
+	ADD_PROPERTY(PropertyInfo(Variant::INT, "lifetime", PROPERTY_HINT_RANGE, "0,10000,,or_greater"), "set_lifetime", "get_lifetime");
 
 	ClassDB::bind_method(D_METHOD("set_min_vertex_distance", "min_vertex_distance"), &Trail3D::set_min_vertex_distance);
 	ClassDB::bind_method(D_METHOD("get_min_vertex_distance"), &Trail3D::get_min_vertex_distance);
@@ -67,6 +64,7 @@ Trail3D::Trail3D()
 {
 	// Initialize any variables here.
 	m_mesh.instantiate();
+	m_mesh->set_use_transform(true);
 	set_base(m_mesh->get_rid());
 }
 
@@ -212,47 +210,16 @@ void Trail3D::set_normal(const Vector3 &p_normal)
 
 #pragma endregion
 
-#pragma region m_use_global_space
-
-bool Trail3D::get_use_global_space() const
-{
-	return m_mesh->get_use_transform();
-}
-
-void Trail3D::set_use_global_space(bool p_use_global_space)
-{
-	m_mesh->set_use_transform(p_use_global_space);
-	_is_dirty = true;
-}
-
-#pragma endregion
-
-#pragma region m_transform
-
-Transform3D Trail3D::get_mesh_transform() const
-{
-	return m_mesh->get_transform();
-}
-
-void Trail3D::set_mesh_transform(const Transform3D &p_transform)
-{
-	m_mesh->set_transform(p_transform);
-	_is_dirty = true;
-}
-
-#pragma endregion
-
 #pragma region m_lifetime
 
-double Trail3D::get_lifetime() const
+uint64_t Trail3D::get_lifetime() const
 {
 	return m_lifetime;
 }
 
-void Trail3D::set_lifetime(double p_lifetime)
+void Trail3D::set_lifetime(uint64_t p_lifetime)
 {
 	m_lifetime = p_lifetime;
-	_is_dirty = true;
 }
 
 #pragma endregion
@@ -292,14 +259,11 @@ void Trail3D::_notification(int p_what)
 	if (p_what == NOTIFICATION_PROCESS)
 	{
 		// Update transform
-		bool use_global_space = get_use_global_space();
-		if (use_global_space)
+		Transform3D global_transform = get_global_transform();
+		if (global_transform != m_mesh->get_transform())
 		{
-			Transform3D global_transform = get_global_transform();
-			if (global_transform != get_mesh_transform())
-			{
-				set_mesh_transform(global_transform);
-			}
+			m_mesh->set_transform(global_transform);
+			_is_dirty = true;
 		}
 
 		// Update view alignment.
@@ -308,11 +272,41 @@ void Trail3D::_notification(int p_what)
 			Camera3D *camera = get_viewport()->get_camera_3d();
 			if (camera != nullptr)
 			{
-				Vector3 camera_position = use_global_space ? camera->get_global_position() : to_local(camera->get_global_position());
+				Vector3 camera_position = camera->get_global_position();
 				if (!camera_position.is_equal_approx(get_normal()))
 				{
 					set_normal(camera_position);
 				}
+			}
+		}
+
+		uint64_t time = Time::get_singleton()->get_ticks_msec();
+
+		// Emit new points.
+		if (m_emmitting)
+		{
+			Vector3 current_position = m_mesh->get_transform().origin;
+			if (m_spawn_times.empty() || m_last_emmited_position.distance_to(current_position) >= m_min_vertex_distance)
+			{
+				m_mesh->add_point(current_position, 0);
+				m_spawn_times.push(time);
+				m_last_emmited_position = current_position;
+				_is_dirty = true;
+			}
+		}
+
+		// Remove old points.
+		while (!m_spawn_times.empty())
+		{
+			if (m_spawn_times.front() + m_lifetime <= time)
+			{
+				m_spawn_times.pop();
+				m_mesh->remove_point(m_spawn_times.size());
+				_is_dirty = true;
+			}
+			else
+			{
+				break;
 			}
 		}
 

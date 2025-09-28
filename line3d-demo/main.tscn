@@ -60,6 +60,6 @@ script = ExtResource("2_gxolv")
 
 [node name="Trail3DDemo" type="Trail3D" parent="."]
 alignment = 0
-normal = Vector3(0, 2, 11)
+normal = Vector3(0, 5, 8)
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3, -3)
 script = ExtResource("5_fqkdk")

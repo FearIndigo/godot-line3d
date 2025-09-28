@@ -1,6 +1,8 @@
 #ifndef TRAIL3D_H
 #define TRAIL3D_H
 
+#include <queue>
+
 #include <godot_cpp/classes/geometry_instance3d.hpp>
 
 #include "line_mesh.h"
@@ -23,9 +25,11 @@ namespace godot
 	private:
 		Ref<LineMesh> m_mesh;
 		TrailAlignment m_alignment = ALIGN_TO_NORMAL;
-		double m_lifetime = 1.0;
-		double m_min_vertex_distance = 0.1;
+		uint64_t m_lifetime = 1000;
+		double m_min_vertex_distance = 0.2;
 		bool m_emmitting = true;
+		std::queue<uint16_t> m_spawn_times;
+		Vector3 m_last_emmited_position = Vector3(0, 0, 0);
 
 	protected:
 		static void _bind_methods();
@@ -67,14 +71,8 @@ namespace godot
 		Vector3 get_normal() const;
 		void set_normal(const Vector3 &p_normal);
 
-		bool get_use_global_space() const;
-		void set_use_global_space(bool p_use_global_space);
-
-		Transform3D get_mesh_transform() const;
-		void set_mesh_transform(const Transform3D &p_transform);
-
-		double get_lifetime() const;
-		void set_lifetime(double p_lifetime);
+		uint64_t get_lifetime() const;
+		void set_lifetime(uint64_t p_lifetime);
 
 		double get_min_vertex_distance() const;
 		void set_min_vertex_distance(double p_min_vertex_distance);

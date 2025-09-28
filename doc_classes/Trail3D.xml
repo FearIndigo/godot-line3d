@@ -38,8 +38,8 @@
 		<member name="gradient" type="Gradient" setter="set_gradient" getter="get_gradient">
 			The gradient used to color the trail over its length.
 		</member>
-		<member name="lifetime" type="float" setter="set_lifetime" getter="get_lifetime" default="1.0">
-			The lifetime of each point in the trail, in seconds. Points will be removed after this time.
+		<member name="lifetime" type="int" setter="set_lifetime" getter="get_lifetime" default="1000">
+			The lifetime of each point in the trail, in miliseconds. Points will be removed after they have been alive for this duration.
 		</member>
 		<member name="min_vertex_distance" type="float" setter="set_min_vertex_distance" getter="get_min_vertex_distance" default="0.1">
 			The minimum distance the Trail3D node must move before a new point is added to the trail.
@@ -52,9 +52,6 @@
 		</member>
 		<member name="tolerance" type="float" setter="set_tolerance" getter="get_tolerance" default="0.02">
 			The tolerance used when simplifying the trail. Higher values result in more aggressive simplification.
-		</member>
-		<member name="use_global_space" type="bool" setter="set_use_global_space" getter="get_use_global_space" default="false">
-			Whether to use global space for the trail points. If false, local space is used.
 		</member>
 		<member name="width" type="float" setter="set_width" getter="get_width" default="0.2">
 			The width of the trail.

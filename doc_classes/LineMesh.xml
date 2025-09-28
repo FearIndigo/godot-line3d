@@ -100,7 +100,7 @@
 		<member name="normal" type="Vector3" setter="set_normal" getter="get_normal" default="Vector3(0, 0, 1)">
 			The normal vector used when alignment is set to ALIGN_TO_NORMAL.
 		</member>
-		<member name="points" type="PackedVector3Array" setter="set_points" getter="get_points" default="PackedVector3Array(0, 0, 0, 0, 1, 0)">
+		<member name="points" type="PackedVector3Array" setter="set_points" getter="get_points" default="PackedVector3Array()">
 			The array of points defining the line.
 		</member>
 		<member name="simplify" type="bool" setter="set_simplify" getter="get_simplify" default="true">

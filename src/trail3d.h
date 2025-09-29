@@ -28,7 +28,7 @@ namespace godot
 		uint64_t m_lifetime = 1000;
 		double m_min_vertex_distance = 0.3;
 		bool m_emmitting = true;
-		std::deque<uint16_t> m_spawn_times;
+		std::deque<uint64_t> m_spawn_times;
 		Vector3 m_previous_position = Vector3(0, 0, 0);
 		Vector3 m_last_emmited_position = Vector3(0, 0, 0);
 		bool m_leading_point = false;

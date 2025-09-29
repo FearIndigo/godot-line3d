@@ -20,7 +20,7 @@ namespace godot
 		};
 
 	private:
-		PackedVector3Array m_points = {};
+		PackedVector3Array m_points;
 		bool m_simplify = true;
 		double m_tolerance = 0.02;
 		bool m_closed = false;

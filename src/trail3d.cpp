@@ -427,6 +427,11 @@ void Trail3D::_notification(int p_what)
 					m_spawn_times.pop_front();
 					m_mesh->remove_point(num_points - 1);
 					_is_dirty = true;
+					if (m_leading_point && num_points == 1)
+					{
+						// Leading point was removed.
+						m_leading_point = false;
+					}
 				}
 			}
 			else

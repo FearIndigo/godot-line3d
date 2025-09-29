@@ -86,10 +86,10 @@
 		<member name="corner_smooth" type="int" setter="set_corner_smooth" getter="get_corner_smooth" default="5">
 			How smooth the line corners are (higher values result in smoother corners).
 		</member>
-		<member name="draw_caps" type="bool" setter="set_draw_caps" getter="get_draw_caps" default="true">
+		<member name="draw_caps" type="bool" setter="set_draw_caps" getter="get_draw_caps" default="false">
 			Whether to draw rounded caps at the ends of the line.
 		</member>
-		<member name="draw_corners" type="bool" setter="set_draw_corners" getter="get_draw_corners" default="true">
+		<member name="draw_corners" type="bool" setter="set_draw_corners" getter="get_draw_corners" default="false">
 			Whether to draw rounded corners at the points where the line changes direction.
 		</member>
 		<member name="gradient" type="Gradient" setter="set_gradient" getter="get_gradient">

@@ -33,9 +33,9 @@ namespace godot
 		bool m_use_transform = false;
 		Transform3D m_transform;
 		Transform3D m_inverse_transform;
-		bool m_draw_caps = true;
+		bool m_draw_caps = false;
 		int m_cap_smooth = 5;
-		bool m_draw_corners = true;
+		bool m_draw_corners = false;
 		int m_corner_smooth = 5;
 		bool m_update_length = false;
 		float m_length = 0.0;

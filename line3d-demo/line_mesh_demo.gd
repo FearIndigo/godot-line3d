@@ -8,20 +8,22 @@ extends MeshInstance3D
 @export var frequency: float = 5.0
 @export var magnitude: float = 0.5
 var time: float = 0.0
+var temp_points: PackedVector3Array
 
 func _ready() -> void:
 	# Initialise points array
+	temp_points.resize(num_points);
 	for i in range(num_points):
-		mesh.add_point(Vector3(0, float(i) / (num_points - 1) * line_length, 0))
+		temp_points[i] = Vector3(0, float(i) / (num_points - 1) * line_length, 0)
+	mesh.set_points(temp_points);
 
 func _process(delta: float) -> void:
 	# Increment time
 	time += delta * speed
 	# Update point positions
-	for i in range(mesh.points.size()):
-		var point = mesh.get_point_position(i)
+	for i in range(num_points):
 		var t: float = float(i) / (num_points - 1)
-		point.x = sin(time + t * frequency) * magnitude
-		mesh.set_point_position(i, point)
+		temp_points[i].x = sin(time + t * frequency) * magnitude
+	mesh.set_points(temp_points);
 	# Redraw the line with updated values.
 	mesh.redraw()

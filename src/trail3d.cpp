@@ -358,10 +358,10 @@ void Trail3D::_notification(int p_what)
 
 		uint64_t time = Time::get_singleton()->get_ticks_msec();
 
-		// Emit new points.
-		if (m_emmitting)
+		// Emit new points when moving.
+		Vector3 current_position = m_mesh->get_transform().origin;
+		if (m_emmitting && current_position.is_equal_approx(m_previous_position) == false)
 		{
-			Vector3 current_position = m_mesh->get_transform().origin;
 			if (m_spawn_times.empty() || m_last_emmited_position.distance_to(current_position) >= m_min_vertex_distance)
 			{
 				// No points or far enough from last point.
@@ -399,6 +399,7 @@ void Trail3D::_notification(int p_what)
 				}
 				_is_dirty = true;
 			}
+			m_previous_position = current_position;
 		}
 
 		// Remove old points and update trailing point.

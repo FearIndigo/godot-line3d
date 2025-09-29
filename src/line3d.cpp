@@ -62,6 +62,22 @@ void Line3D::_bind_methods()
 	ClassDB::bind_method(D_METHOD("set_use_global_space", "use_global_space"), &Line3D::set_use_global_space);
 	ClassDB::bind_method(D_METHOD("get_use_global_space"), &Line3D::get_use_global_space);
 	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "use_global_space"), "set_use_global_space", "get_use_global_space");
+
+	ClassDB::bind_method(D_METHOD("set_draw_caps", "draw_caps"), &Line3D::set_draw_caps);
+	ClassDB::bind_method(D_METHOD("get_draw_caps"), &Line3D::get_draw_caps);
+	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "draw_caps"), "set_draw_caps", "get_draw_caps");
+
+	ClassDB::bind_method(D_METHOD("set_cap_smooth", "cap_smooth"), &Line3D::set_cap_smooth);
+	ClassDB::bind_method(D_METHOD("get_cap_smooth"), &Line3D::get_cap_smooth);
+	ADD_PROPERTY(PropertyInfo(Variant::INT, "cap_smooth"), "set_cap_smooth", "get_cap_smooth");
+
+	ClassDB::bind_method(D_METHOD("set_draw_corners", "draw_corners"), &Line3D::set_draw_corners);
+	ClassDB::bind_method(D_METHOD("get_draw_corners"), &Line3D::get_draw_corners);
+	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "draw_corners"), "set_draw_corners", "get_draw_corners");
+
+	ClassDB::bind_method(D_METHOD("set_corner_smooth", "corner_smooth"), &Line3D::set_corner_smooth);
+	ClassDB::bind_method(D_METHOD("get_corner_smooth"), &Line3D::get_corner_smooth);
+	ADD_PROPERTY(PropertyInfo(Variant::INT, "corner_smooth"), "set_corner_smooth", "get_corner_smooth");
 }
 
 Line3D::Line3D()
@@ -297,6 +313,66 @@ Transform3D Line3D::get_mesh_transform() const
 void Line3D::set_mesh_transform(const Transform3D &p_transform)
 {
 	m_mesh->set_transform(p_transform);
+	_is_dirty = true;
+}
+
+#pragma endregion
+
+#pragma region m_draw_caps
+
+bool Line3D::get_draw_caps() const
+{
+	return m_mesh->get_draw_caps();
+}
+
+void Line3D::set_draw_caps(bool p_draw_caps)
+{
+	m_mesh->set_draw_caps(p_draw_caps);
+	_is_dirty = true;
+}
+
+#pragma endregion
+
+#pragma region m_cap_smooth
+
+int Line3D::get_cap_smooth() const
+{
+	return m_mesh->get_cap_smooth();
+}
+
+void Line3D::set_cap_smooth(int p_cap_smooth)
+{
+	m_mesh->set_cap_smooth(p_cap_smooth);
+	_is_dirty = true;
+}
+
+#pragma endregion
+
+#pragma region m_draw_corners
+
+bool Line3D::get_draw_corners() const
+{
+	return m_mesh->get_draw_corners();
+}
+
+void Line3D::set_draw_corners(bool p_draw_corners)
+{
+	m_mesh->set_draw_corners(p_draw_corners);
+	_is_dirty = true;
+}
+
+#pragma endregion
+
+#pragma region m_corner_smooth
+
+int Line3D::get_corner_smooth() const
+{
+	return m_mesh->get_corner_smooth();
+}
+
+void Line3D::set_corner_smooth(int p_corner_smooth)
+{
+	m_mesh->set_corner_smooth(p_corner_smooth);
 	_is_dirty = true;
 }
 

@@ -33,6 +33,10 @@ namespace godot
 		bool m_use_transform = false;
 		Transform3D m_transform;
 		Transform3D m_inverse_transform;
+		bool m_draw_caps = true;
+		int m_cap_smooth = 5;
+		bool m_draw_corners = true;
+		int m_corner_smooth = 5;
 
 	protected:
 		static void _bind_methods();
@@ -87,6 +91,18 @@ namespace godot
 
 		Transform3D get_transform() const;
 		void set_transform(const Transform3D &p_transform);
+
+		bool get_draw_caps() const;
+		void set_draw_caps(bool p_draw_caps);
+
+		int get_cap_smooth() const;
+		void set_cap_smooth(int p_cap_smooth);
+
+		bool get_draw_corners() const;
+		void set_draw_corners(bool p_draw_corners);
+
+		int get_corner_smooth() const;
+		void set_corner_smooth(int p_corner_smooth);
 
 		void redraw();
 	};

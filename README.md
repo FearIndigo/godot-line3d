@@ -32,6 +32,19 @@ git submodule update --init
 scons platform=<platform>
 ```
 
+## Build Docs
+
+Navigate to the demo folder after builing the library. `cd ./line3d-demo`
+
+Run the command bellow to generate the xml files in `/doc_clases` folder.
+
+```bash
+# If godot is not part of you PATH then use the path to the godot executable instead
+godot --doctool ../ --gdextension-docs
+```
+
+Edit the generated doc files in `/doc_classes`.
+
 ## Installation
 
 First you need to compile the binaries for your target platforms (see build section above for more info). Once you have done that, copy the `line3d-demo/addons/line3d` folder into your project's `addons` folder.

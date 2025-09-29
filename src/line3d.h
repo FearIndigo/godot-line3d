@@ -78,6 +78,18 @@ namespace godot
 
 		Transform3D get_mesh_transform() const;
 		void set_mesh_transform(const Transform3D &p_transform);
+
+		bool get_draw_caps() const;
+		void set_draw_caps(bool p_draw_caps);
+
+		int get_cap_smooth() const;
+		void set_cap_smooth(int p_cap_smooth);
+
+		bool get_draw_corners() const;
+		void set_draw_corners(bool p_draw_corners);
+
+		int get_corner_smooth() const;
+		void set_corner_smooth(int p_corner_smooth);
 	};
 
 } // namespace godot

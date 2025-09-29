@@ -60,6 +60,22 @@ void LineMesh::_bind_methods()
 	ClassDB::bind_method(D_METHOD("set_transform", "transform"), &LineMesh::set_transform);
 	ClassDB::bind_method(D_METHOD("get_transform"), &LineMesh::get_transform);
 
+	ClassDB::bind_method(D_METHOD("set_draw_caps", "draw_caps"), &LineMesh::set_draw_caps);
+	ClassDB::bind_method(D_METHOD("get_draw_caps"), &LineMesh::get_draw_caps);
+	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "draw_caps"), "set_draw_caps", "get_draw_caps");
+
+	ClassDB::bind_method(D_METHOD("set_cap_smooth", "cap_smooth"), &LineMesh::set_cap_smooth);
+	ClassDB::bind_method(D_METHOD("get_cap_smooth"), &LineMesh::get_cap_smooth);
+	ADD_PROPERTY(PropertyInfo(Variant::INT, "cap_smooth"), "set_cap_smooth", "get_cap_smooth");
+
+	ClassDB::bind_method(D_METHOD("set_draw_corners", "draw_corners"), &LineMesh::set_draw_corners);
+	ClassDB::bind_method(D_METHOD("get_draw_corners"), &LineMesh::get_draw_corners);
+	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "draw_corners"), "set_draw_corners", "get_draw_corners");
+
+	ClassDB::bind_method(D_METHOD("set_corner_smooth", "corner_smooth"), &LineMesh::set_corner_smooth);
+	ClassDB::bind_method(D_METHOD("get_corner_smooth"), &LineMesh::get_corner_smooth);
+	ADD_PROPERTY(PropertyInfo(Variant::INT, "corner_smooth"), "set_corner_smooth", "get_corner_smooth");
+
 	ClassDB::bind_method(D_METHOD("redraw"), &LineMesh::redraw);
 }
 
@@ -266,6 +282,62 @@ void LineMesh::set_transform(const Transform3D &p_transform)
 {
 	m_transform = p_transform;
 	m_inverse_transform = m_transform.inverse();
+}
+
+#pragma endregion
+
+#pragma region m_draw_caps
+
+bool LineMesh::get_draw_caps() const
+{
+	return m_draw_caps;
+}
+
+void LineMesh::set_draw_caps(bool p_draw_caps)
+{
+	m_draw_caps = p_draw_caps;
+}
+
+#pragma endregion
+
+#pragma region m_cap_smooth
+
+int LineMesh::get_cap_smooth() const
+{
+	return m_cap_smooth;
+}
+
+void LineMesh::set_cap_smooth(int p_cap_smooth)
+{
+	m_cap_smooth = p_cap_smooth;
+}
+
+#pragma endregion
+
+#pragma region m_draw_corners
+
+bool LineMesh::get_draw_corners() const
+{
+	return m_draw_corners;
+}
+
+void LineMesh::set_draw_corners(bool p_draw_corners)
+{
+	m_draw_corners = p_draw_corners;
+}
+
+#pragma endregion
+
+#pragma region m_corner_smooth
+
+int LineMesh::get_corner_smooth() const
+{
+	return m_corner_smooth;
+}
+
+void LineMesh::set_corner_smooth(int p_corner_smooth)
+{
+	m_corner_smooth = p_corner_smooth;
 }
 
 #pragma endregion

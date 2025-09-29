@@ -58,6 +58,22 @@ void Trail3D::_bind_methods()
 	ClassDB::bind_method(D_METHOD("set_emitting", "emitting"), &Trail3D::set_emitting);
 	ClassDB::bind_method(D_METHOD("get_emitting"), &Trail3D::get_emitting);
 	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "emitting"), "set_emitting", "get_emitting");
+
+	ClassDB::bind_method(D_METHOD("set_draw_caps", "draw_caps"), &Trail3D::set_draw_caps);
+	ClassDB::bind_method(D_METHOD("get_draw_caps"), &Trail3D::get_draw_caps);
+	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "draw_caps"), "set_draw_caps", "get_draw_caps");
+
+	ClassDB::bind_method(D_METHOD("set_cap_smooth", "cap_smooth"), &Trail3D::set_cap_smooth);
+	ClassDB::bind_method(D_METHOD("get_cap_smooth"), &Trail3D::get_cap_smooth);
+	ADD_PROPERTY(PropertyInfo(Variant::INT, "cap_smooth"), "set_cap_smooth", "get_cap_smooth");
+
+	ClassDB::bind_method(D_METHOD("set_draw_corners", "draw_corners"), &Trail3D::set_draw_corners);
+	ClassDB::bind_method(D_METHOD("get_draw_corners"), &Trail3D::get_draw_corners);
+	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "draw_corners"), "set_draw_corners", "get_draw_corners");
+
+	ClassDB::bind_method(D_METHOD("set_corner_smooth", "corner_smooth"), &Trail3D::set_corner_smooth);
+	ClassDB::bind_method(D_METHOD("get_corner_smooth"), &Trail3D::get_corner_smooth);
+	ADD_PROPERTY(PropertyInfo(Variant::INT, "corner_smooth"), "set_corner_smooth", "get_corner_smooth");
 }
 
 Trail3D::Trail3D()
@@ -249,6 +265,66 @@ bool Trail3D::get_emitting() const
 void Trail3D::set_emitting(bool p_emitting)
 {
 	m_emmitting = p_emitting;
+	_is_dirty = true;
+}
+
+#pragma endregion
+
+#pragma region m_draw_caps
+
+bool Trail3D::get_draw_caps() const
+{
+	return m_mesh->get_draw_caps();
+}
+
+void Trail3D::set_draw_caps(bool p_draw_caps)
+{
+	m_mesh->set_draw_caps(p_draw_caps);
+	_is_dirty = true;
+}
+
+#pragma endregion
+
+#pragma region m_cap_smooth
+
+int Trail3D::get_cap_smooth() const
+{
+	return m_mesh->get_cap_smooth();
+}
+
+void Trail3D::set_cap_smooth(int p_cap_smooth)
+{
+	m_mesh->set_cap_smooth(p_cap_smooth);
+	_is_dirty = true;
+}
+
+#pragma endregion
+
+#pragma region m_draw_corners
+
+bool Trail3D::get_draw_corners() const
+{
+	return m_mesh->get_draw_corners();
+}
+
+void Trail3D::set_draw_corners(bool p_draw_corners)
+{
+	m_mesh->set_draw_corners(p_draw_corners);
+	_is_dirty = true;
+}
+
+#pragma endregion
+
+#pragma region m_corner_smooth
+
+int Trail3D::get_corner_smooth() const
+{
+	return m_mesh->get_corner_smooth();
+}
+
+void Trail3D::set_corner_smooth(int p_corner_smooth)
+{
+	m_mesh->set_corner_smooth(p_corner_smooth);
 	_is_dirty = true;
 }
 

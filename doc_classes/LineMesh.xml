@@ -27,6 +27,12 @@
 				Removes all points from the line.
 			</description>
 		</method>
+		<method name="get_length">
+			<return type="float" />
+			<description>
+				Returns the total length of the line. If properties affecting line length have been modified, the length is recalculated.
+			</description>
+		</method>
 		<method name="get_point_position" qualifiers="const">
 			<return type="Vector3" />
 			<param index="0" name="index" type="int" />

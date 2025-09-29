@@ -78,6 +78,8 @@ void Line3D::_bind_methods()
 	ClassDB::bind_method(D_METHOD("set_corner_smooth", "corner_smooth"), &Line3D::set_corner_smooth);
 	ClassDB::bind_method(D_METHOD("get_corner_smooth"), &Line3D::get_corner_smooth);
 	ADD_PROPERTY(PropertyInfo(Variant::INT, "corner_smooth"), "set_corner_smooth", "get_corner_smooth");
+
+	ClassDB::bind_method(D_METHOD("get_length"), &Line3D::get_length);
 }
 
 Line3D::Line3D()
@@ -374,6 +376,15 @@ void Line3D::set_corner_smooth(int p_corner_smooth)
 {
 	m_mesh->set_corner_smooth(p_corner_smooth);
 	_is_dirty = true;
+}
+
+#pragma endregion
+
+#pragma region m_length
+
+double Line3D::get_length()
+{
+	return m_mesh->get_length();
 }
 
 #pragma endregion

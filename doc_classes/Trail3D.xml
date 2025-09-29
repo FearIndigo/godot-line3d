@@ -17,6 +17,12 @@
 	<tutorials>
 	</tutorials>
 	<methods>
+		<method name="get_length">
+			<return type="float" />
+			<description>
+				Returns the total length of the trail. If properties affecting trail length have been modified, the length is recalculated.
+			</description>
+		</method>
 		<method name="set_dirty">
 			<return type="void" />
 			<description>

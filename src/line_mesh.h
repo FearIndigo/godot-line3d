@@ -37,6 +37,8 @@ namespace godot
 		int m_cap_smooth = 5;
 		bool m_draw_corners = true;
 		int m_corner_smooth = 5;
+		bool m_update_length = false;
+		float m_length = 0.0;
 
 	protected:
 		static void _bind_methods();
@@ -103,6 +105,9 @@ namespace godot
 
 		int get_corner_smooth() const;
 		void set_corner_smooth(int p_corner_smooth);
+
+		double get_length();
+		void update_length();
 
 		void redraw();
 	};

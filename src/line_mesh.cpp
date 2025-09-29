@@ -76,6 +76,8 @@ void LineMesh::_bind_methods()
 	ClassDB::bind_method(D_METHOD("get_corner_smooth"), &LineMesh::get_corner_smooth);
 	ADD_PROPERTY(PropertyInfo(Variant::INT, "corner_smooth"), "set_corner_smooth", "get_corner_smooth");
 
+	ClassDB::bind_method(D_METHOD("get_length"), &LineMesh::get_length);
+
 	ClassDB::bind_method(D_METHOD("redraw"), &LineMesh::redraw);
 }
 
@@ -98,11 +100,13 @@ void LineMesh::add_point(const Vector3 &p_position, int64_t p_index)
 		m_points.push_back(p_position);
 	else
 		m_points.insert(p_index, p_position);
+	m_update_length = true;
 }
 
 void LineMesh::clear_points()
 {
 	m_points.clear();
+	m_update_length = true;
 }
 
 Vector3 LineMesh::get_point_position(int64_t p_index) const
@@ -118,16 +122,19 @@ PackedVector3Array LineMesh::get_points() const
 void LineMesh::remove_point(int64_t p_index)
 {
 	m_points.remove_at(p_index);
+	m_update_length = true;
 }
 
 void LineMesh::set_point_position(int64_t p_index, const Vector3 &p_position)
 {
 	m_points.set(p_index, p_position);
+	m_update_length = true;
 }
 
 void LineMesh::set_points(const PackedVector3Array &p_points)
 {
 	m_points = p_points;
+	m_update_length = true;
 }
 
 #pragma endregion
@@ -142,6 +149,7 @@ bool LineMesh::get_simplify() const
 void LineMesh::set_simplify(bool p_simplify)
 {
 	m_simplify = p_simplify;
+	m_update_length = true;
 }
 
 #pragma endregion
@@ -156,6 +164,7 @@ double LineMesh::get_tolerance() const
 void LineMesh::set_tolerance(double p_tolerance)
 {
 	m_tolerance = p_tolerance;
+	m_update_length = true;
 }
 
 #pragma endregion
@@ -170,6 +179,7 @@ bool LineMesh::get_closed() const
 void LineMesh::set_closed(bool p_closed)
 {
 	m_closed = p_closed;
+	m_update_length = true;
 }
 
 #pragma endregion
@@ -338,6 +348,36 @@ int LineMesh::get_corner_smooth() const
 void LineMesh::set_corner_smooth(int p_corner_smooth)
 {
 	m_corner_smooth = p_corner_smooth;
+}
+
+#pragma endregion
+
+#pragma region m_length
+
+double LineMesh::get_length()
+{
+	if (m_update_length)
+	{
+		update_length();
+	}
+	return m_length;
+}
+
+void LineMesh::update_length()
+{
+	m_update_length = false;
+	m_length = 0.0;
+	PackedVector3Array points = _get_simplified_points();
+	int64_t num_points = points.size();
+	if (num_points < 2 || (m_closed && num_points < 3))
+		return;
+
+	for (int64_t i = 0; i < (m_closed ? num_points : num_points - 1); i++)
+	{
+		Vector3 current_point = points[i];
+		Vector3 next_point = points[(i + 1) % num_points];
+		m_length += current_point.distance_to(next_point);
+	}
 }
 
 #pragma endregion

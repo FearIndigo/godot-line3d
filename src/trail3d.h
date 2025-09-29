@@ -93,6 +93,8 @@ namespace godot
 
 		int get_corner_smooth() const;
 		void set_corner_smooth(int p_corner_smooth);
+
+		double get_length();
 	};
 
 } // namespace godot

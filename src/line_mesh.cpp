@@ -485,6 +485,10 @@ void LineMesh::redraw()
 	// Get number of segments
 	int64_t num_segments = m_closed ? num_points : num_points - 1;
 
+	// Get current line length and track current length along line.
+	double total_length = get_length();
+	double current_length = 0.0;
+
 	// Draw segments
 	for (int64_t i = 0; i <= num_segments; i++)
 	{
@@ -506,18 +510,24 @@ void LineMesh::redraw()
 		Vector3 bitangent = alignment.cross(tangent).normalized();
 		Vector3 normal = dir_avg.cross(bitangent).normalized();
 
-		// bitangent *= m_width / 2.0 + m_width / 10.0 * (tangent_angle * tangent_angle);
-		bitangent *= m_width / 2.0;
+		// Get width at current point along line.
+		double width = m_width_curve.is_valid() ? m_width * m_width_curve->sample_baked(current_length / total_length) : m_width;
+		bitangent *= width / 2.0;
+
+		// Get color at current point along line.
+		Color color = m_gradient.is_valid() ? m_color * m_gradient->sample(current_length / total_length) : m_color;
 
 		surface_set_normal(normal);
 		surface_set_uv(Vector2(0, 1));
-		surface_set_color(m_color);
+		surface_set_color(color);
 		surface_add_vertex(current_point - bitangent);
 
 		surface_set_normal(normal);
 		surface_set_uv(Vector2(1, 1));
-		surface_set_color(m_color);
+		surface_set_color(color);
 		surface_add_vertex(current_point + bitangent);
+
+		current_length += current_point.distance_to(next_point);
 	}
 
 	// End drawing.

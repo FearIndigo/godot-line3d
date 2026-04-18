@@ -1,9 +1,11 @@
-[gd_scene load_steps=11 format=3 uid="uid://disr5adx5hhtw"]
+[gd_scene load_steps=18 format=3 uid="uid://disr5adx5hhtw"]
 
-[ext_resource type="Script" path="res://camera_controls.gd" id="1_ikykm"]
-[ext_resource type="Script" path="res://line3d_demo.gd" id="1_nik3e"]
-[ext_resource type="Script" path="res://line_mesh_demo.gd" id="2_gxolv"]
-[ext_resource type="Script" path="res://fps_counter.gd" id="2_r1cp3"]
+[ext_resource type="Script" uid="uid://br4a26oy5m7i4" path="res://camera_controls.gd" id="1_ikykm"]
+[ext_resource type="Script" uid="uid://bcae4ef020ux4" path="res://line3d_demo.gd" id="1_nik3e"]
+[ext_resource type="Script" uid="uid://dua70ehjhw202" path="res://line_mesh_demo.gd" id="2_gxolv"]
+[ext_resource type="Script" uid="uid://c3ledpq2o1m8y" path="res://fps_counter.gd" id="2_r1cp3"]
+[ext_resource type="Script" uid="uid://bhp34mgt4ab58" path="res://line3d_color_demo.gd" id="3_7mycd"]
+[ext_resource type="Script" uid="uid://b0qvtjjkhlx7b" path="res://trail3d_demo.gd" id="5_fqkdk"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_p4ti3"]
 
@@ -20,7 +22,25 @@ size = Vector2(50, 50)
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_cuggl"]
 albedo_color = Color(0.47, 0.28952, 0.1316, 1)
 
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_272bh"]
+vertex_color_use_as_albedo = true
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_7mycd"]
+vertex_color_use_as_albedo = true
+
 [sub_resource type="LineMesh" id="LineMesh_1y234"]
+
+[sub_resource type="Curve" id="Curve_lquwl"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="Gradient" id="Gradient_lquwl"]
+offsets = PackedFloat32Array(0, 0.122507125, 1)
+colors = PackedColorArray(0.20017129, 0.51187944, 1, 1, 0.99176925, 0, 0.24200988, 1, 0.9722268, 0.52256465, 0, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_lquwl"]
+shading_mode = 0
+vertex_color_use_as_albedo = true
 
 [node name="Main" type="Node3D"]
 
@@ -46,13 +66,33 @@ offset_right = 40.0
 offset_bottom = 23.0
 script = ExtResource("2_r1cp3")
 
+[node name="Line3DColorDemo" type="Line3D" parent="."]
+points = PackedVector3Array(-8, 0, 0, 0, 0, -8, 8, 0, 0, 0, 0, 8)
+simplify = false
+closed = true
+width = 1.0
+normal = Vector3(0, 1, 0)
+material_override = SubResource("StandardMaterial3D_272bh")
+script = ExtResource("3_7mycd")
+
 [node name="Line3DDemo" type="Line3D" parent="."]
+color = Color(0, 0.5568628, 1, 1)
 alignment = 0
-normal = Vector3(2, 5, 8)
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 0, 0)
+normal = Vector3(4, 5, 8)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, 0, 0)
+material_override = SubResource("StandardMaterial3D_7mycd")
 script = ExtResource("1_nik3e")
 
 [node name="LineMeshDemo" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 0, 0)
 mesh = SubResource("LineMesh_1y234")
 script = ExtResource("2_gxolv")
+
+[node name="Trail3DDemo" type="Trail3D" parent="."]
+width_curve = SubResource("Curve_lquwl")
+gradient = SubResource("Gradient_lquwl")
+alignment = 0
+normal = Vector3(0, 5, 8)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 5, 0)
+material_override = SubResource("StandardMaterial3D_lquwl")
+cast_shadow = 0
+script = ExtResource("5_fqkdk")

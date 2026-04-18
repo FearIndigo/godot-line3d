@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<class name="LineMesh" inherits="ImmediateMesh" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/godotengine/godot/master/doc/class.xsd">
+	<brief_description>
+		A mesh representing a 3D line.
+	</brief_description>
+	<description>
+		A mesh representing a 3D line.
+
+		LineMesh is used by Line3D to render lines in 3D space. It supports various options for customizing the appearance of the line, including width, color, gradient, and alignment.
+
+		You can create and modify a LineMesh directly using its methods, or use it indirectly by adding points to a Line3D node.
+	</description>
+	<tutorials>
+	</tutorials>
+	<methods>
+		<method name="add_point">
+			<return type="void" />
+			<param index="0" name="position" type="Vector3" />
+			<param index="1" name="index" type="int" default="-1" />
+			<description>
+				Adds a point to the line at the specified position. If index is -1, the point is added at the end of the line.
+			</description>
+		</method>
+		<method name="clear_points">
+			<return type="void" />
+			<description>
+				Removes all points from the line.
+			</description>
+		</method>
+		<method name="get_length">
+			<return type="float" />
+			<description>
+				Returns the total length of the line. If properties affecting line length have been modified, the length is recalculated.
+			</description>
+		</method>
+		<method name="get_point_position" qualifiers="const">
+			<return type="Vector3" />
+			<param index="0" name="index" type="int" />
+			<description>
+				Returns the position of the point at the specified index.
+			</description>
+		</method>
+		<method name="get_transform" qualifiers="const">
+			<return type="Transform3D" />
+			<description>
+				Returns the transform applied to the line.
+			</description>
+		</method>
+		<method name="get_use_transform" qualifiers="const">
+			<return type="bool" />
+			<description>
+				Returns whether the transform is applied to the line.
+			</description>
+		</method>
+		<method name="redraw">
+			<return type="void" />
+			<description>
+				Rebuilds the mesh. Call this method after making multiple changes to the line to update its appearance.
+
+				 Note: When using a Line3D node, you typically do not need to call this method directly, as the Line3D node will handle updating the mesh automatically.
+			</description>
+		</method>
+		<method name="remove_point">
+			<return type="void" />
+			<param index="0" name="index" type="int" />
+			<description>
+				Removes the point at the specified index.
+			</description>
+		</method>
+		<method name="set_point_position">
+			<return type="void" />
+			<param index="0" name="index" type="int" />
+			<param index="1" name="position" type="Vector3" />
+			<description>
+				Sets the position of the point at the specified index.
+			</description>
+		</method>
+		<method name="set_transform">
+			<return type="void" />
+			<param index="0" name="transform" type="Transform3D" />
+			<description>
+				Sets the transform to be applied to the line.
+			</description>
+		</method>
+		<method name="set_use_transform">
+			<return type="void" />
+			<param index="0" name="use_transform" type="bool" />
+			<description>
+				Sets whether to apply the transform to the line.
+			</description>
+		</method>
+	</methods>
+	<members>
+		<member name="alignment" type="int" setter="set_alignment" getter="get_alignment" enum="LineMesh.FaceAlignment" default="1">
+			The alignment mode for the line segments.
+		</member>
+		<member name="cap_smooth" type="int" setter="set_cap_smooth" getter="get_cap_smooth" default="5">
+			How smooth the line caps are (higher values result in smoother caps).
+		</member>
+		<member name="closed" type="bool" setter="set_closed" getter="get_closed" default="false">
+			Whether the line is closed (i.e., the last point connects back to the first point).
+		</member>
+		<member name="color" type="Color" setter="set_color" getter="get_color" default="Color(1, 1, 1, 1)">
+			The base color of the line.
+		</member>
+		<member name="corner_smooth" type="int" setter="set_corner_smooth" getter="get_corner_smooth" default="5">
+			How smooth the line corners are (higher values result in smoother corners).
+		</member>
+		<member name="draw_caps" type="bool" setter="set_draw_caps" getter="get_draw_caps" default="false">
+			Whether to draw rounded caps at the ends of the line.
+		</member>
+		<member name="draw_corners" type="bool" setter="set_draw_corners" getter="get_draw_corners" default="false">
+			Whether to draw rounded corners at the points where the line changes direction.
+		</member>
+		<member name="gradient" type="Gradient" setter="set_gradient" getter="get_gradient">
+			A gradient to apply along the length of the line.
+		</member>
+		<member name="normal" type="Vector3" setter="set_normal" getter="get_normal" default="Vector3(0, 0, 1)">
+			The normal vector used when alignment is set to ALIGN_TO_NORMAL.
+		</member>
+		<member name="points" type="PackedVector3Array" setter="set_points" getter="get_points" default="PackedVector3Array()">
+			The array of points defining the line.
+		</member>
+		<member name="simplify" type="bool" setter="set_simplify" getter="get_simplify" default="true">
+			Whether to simplify the line by removing unnecessary points.
+		</member>
+		<member name="tolerance" type="float" setter="set_tolerance" getter="get_tolerance" default="0.02">
+			The tolerance used when simplifying the line. Higher values result in more aggressive simplification.
+		</member>
+		<member name="width" type="float" setter="set_width" getter="get_width" default="0.2">
+			The width of the line.
+		</member>
+		<member name="width_curve" type="Curve" setter="set_width_curve" getter="get_width_curve">
+			A curve to modulate the width of the line along its length.
+		</member>
+	</members>
+	<constants>
+		<constant name="FACE_TOWARD_POSITION" value="0" enum="FaceAlignment">
+			Line segments face toward the position provided.
+		</constant>
+		<constant name="ALIGN_TO_NORMAL" value="1" enum="FaceAlignment">
+			Line segments align to the provided normal.
+		</constant>
+	</constants>
+</class>

@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<class name="Trail3D" inherits="GeometryInstance3D" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/godotengine/godot/master/doc/class.xsd">
+	<brief_description>
+		Generates a 3D trail when the node moves.
+	</brief_description>
+	<description>
+		Generates a 3D trail when the node moves.
+
+		 Trail3D uses a LineMesh to render a trail in 3D space. The trail is created by emitting points based on the movement of the Trail3D node. You can customize the appearance of the trail using various properties, including width, color, gradient, and alignment.
+
+		 The lifetime property determines how long each point in the trail lasts before it is removed. You can also set the minimum distance the node must move before a new point is added to the trail using the min_vertex_distance property.
+
+		 The alignment property determines how the trail is oriented in 3D space. It can be set to align to the view, face toward a specific position, or align to a specified normal vector.
+
+		 You can enable or disable simplification of the trail using the simplify property, which removes unnecessary points based on a specified tolerance.
+	</description>
+	<tutorials>
+	</tutorials>
+	<methods>
+		<method name="get_length">
+			<return type="float" />
+			<description>
+				Returns the total length of the trail. If properties affecting trail length have been modified, the length is recalculated.
+			</description>
+		</method>
+		<method name="set_dirty">
+			<return type="void" />
+			<description>
+				Marks the trail as dirty, causing it to be redrawn on the next frame.
+				 Note: that the trail is automatically marked as dirty when you modify its properties, so you typically do not need to call this method directly.
+			</description>
+		</method>
+	</methods>
+	<members>
+		<member name="alignment" type="int" setter="set_alignment" getter="get_alignment" enum="Trail3D.TrailAlignment" default="2">
+			Set the alignment of the trail in 3D space.
+		</member>
+		<member name="cap_smooth" type="int" setter="set_cap_smooth" getter="get_cap_smooth" default="5">
+			How smooth the trail caps are (higher values result in smoother caps).
+		</member>
+		<member name="color" type="Color" setter="set_color" getter="get_color" default="Color(1, 1, 1, 1)">
+			The base color of the trail.
+		</member>
+		<member name="corner_smooth" type="int" setter="set_corner_smooth" getter="get_corner_smooth" default="5">
+			How smooth the trail corners are (higher values result in smoother corners).
+		</member>
+		<member name="draw_caps" type="bool" setter="set_draw_caps" getter="get_draw_caps" default="false">
+			Whether to draw rounded caps at the ends of the trail.
+		</member>
+		<member name="draw_corners" type="bool" setter="set_draw_corners" getter="get_draw_corners" default="false">
+			Whether to draw rounded corners at the points where the trail changes direction.
+		</member>
+		<member name="emitting" type="bool" setter="set_emitting" getter="get_emitting" default="true">
+			Whether the trail is currently emitting points based on the movement of the Trail3D node.
+		</member>
+		<member name="gradient" type="Gradient" setter="set_gradient" getter="get_gradient">
+			The gradient used to color the trail over its length.
+		</member>
+		<member name="lifetime" type="int" setter="set_lifetime" getter="get_lifetime" default="1000">
+			The lifetime of each point in the trail, in miliseconds. Points will be removed after they have been alive for this duration.
+		</member>
+		<member name="min_vertex_distance" type="float" setter="set_min_vertex_distance" getter="get_min_vertex_distance" default="0.3">
+			The minimum distance the Trail3D node must move before a new point is added to the trail.
+		</member>
+		<member name="normal" type="Vector3" setter="set_normal" getter="get_normal" default="Vector3(0, 0, 1)">
+			The normal vector used when alignment is set to ALIGN_TO_NORMAL.
+		</member>
+		<member name="simplify" type="bool" setter="set_simplify" getter="get_simplify" default="true">
+			Whether to simplify the trail by removing unnecessary points based on the tolerance property.
+		</member>
+		<member name="tolerance" type="float" setter="set_tolerance" getter="get_tolerance" default="0.02">
+			The tolerance used when simplifying the trail. Higher values result in more aggressive simplification.
+		</member>
+		<member name="width" type="float" setter="set_width" getter="get_width" default="0.2">
+			The width of the trail.
+		</member>
+		<member name="width_curve" type="Curve" setter="set_width_curve" getter="get_width_curve">
+			A curve that defines how the width of the trail changes over its length.
+		</member>
+	</members>
+	<constants>
+		<constant name="ALIGN_TO_VIEW" value="0" enum="TrailAlignment">
+			Aligns the trail to always face the camera.
+		</constant>
+		<constant name="FACE_TOWARD_POSITION" value="1" enum="TrailAlignment">
+			Aligns the trail to face toward a specific position in 3D space.
+		</constant>
+		<constant name="ALIGN_TO_NORMAL" value="2" enum="TrailAlignment">
+			Aligns the trail according to a specified normal vector.
+		</constant>
+	</constants>
+</class>

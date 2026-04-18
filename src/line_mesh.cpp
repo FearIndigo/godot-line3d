@@ -4,7 +4,8 @@
 
 using namespace godot;
 
-void LineMesh::_bind_methods() {
+void LineMesh::_bind_methods()
+{
 	BIND_ENUM_CONSTANT(FACE_TOWARD_POSITION);
 	BIND_ENUM_CONSTANT(ALIGN_TO_NORMAL);
 
@@ -23,7 +24,7 @@ void LineMesh::_bind_methods() {
 
 	ClassDB::bind_method(D_METHOD("set_tolerance", "tolerance"), &LineMesh::set_tolerance);
 	ClassDB::bind_method(D_METHOD("get_tolerance"), &LineMesh::get_tolerance);
-	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "tolerance", PROPERTY_HINT_RANGE, "0,10,,or_greater"), "set_tolerance", "get_tolerance");
+	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "tolerance", PROPERTY_HINT_RANGE, "0,2,,or_greater"), "set_tolerance", "get_tolerance");
 
 	ClassDB::bind_method(D_METHOD("set_closed", "closed"), &LineMesh::set_closed);
 	ClassDB::bind_method(D_METHOD("get_closed"), &LineMesh::get_closed);
@@ -59,94 +60,139 @@ void LineMesh::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("set_transform", "transform"), &LineMesh::set_transform);
 	ClassDB::bind_method(D_METHOD("get_transform"), &LineMesh::get_transform);
 
+	ClassDB::bind_method(D_METHOD("set_draw_caps", "draw_caps"), &LineMesh::set_draw_caps);
+	ClassDB::bind_method(D_METHOD("get_draw_caps"), &LineMesh::get_draw_caps);
+	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "draw_caps"), "set_draw_caps", "get_draw_caps");
+
+	ClassDB::bind_method(D_METHOD("set_cap_smooth", "cap_smooth"), &LineMesh::set_cap_smooth);
+	ClassDB::bind_method(D_METHOD("get_cap_smooth"), &LineMesh::get_cap_smooth);
+	ADD_PROPERTY(PropertyInfo(Variant::INT, "cap_smooth"), "set_cap_smooth", "get_cap_smooth");
+
+	ClassDB::bind_method(D_METHOD("set_draw_corners", "draw_corners"), &LineMesh::set_draw_corners);
+	ClassDB::bind_method(D_METHOD("get_draw_corners"), &LineMesh::get_draw_corners);
+	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "draw_corners"), "set_draw_corners", "get_draw_corners");
+
+	ClassDB::bind_method(D_METHOD("set_corner_smooth", "corner_smooth"), &LineMesh::set_corner_smooth);
+	ClassDB::bind_method(D_METHOD("get_corner_smooth"), &LineMesh::get_corner_smooth);
+	ADD_PROPERTY(PropertyInfo(Variant::INT, "corner_smooth"), "set_corner_smooth", "get_corner_smooth");
+
+	ClassDB::bind_method(D_METHOD("get_length"), &LineMesh::get_length);
+
 	ClassDB::bind_method(D_METHOD("redraw"), &LineMesh::redraw);
 }
 
-LineMesh::LineMesh() {
+LineMesh::LineMesh()
+{
 	// Initialize any variables here.
 	redraw();
 }
 
-LineMesh::~LineMesh() {
+LineMesh::~LineMesh()
+{
 	// Add your cleanup here.
 }
 
 #pragma region m_points
 
-void LineMesh::add_point(const Vector3 &p_position, int64_t p_index) {
-	if(p_index == -1) m_points.push_back(p_position);
-	else m_points.insert(p_index, p_position);
+void LineMesh::add_point(const Vector3 &p_position, int64_t p_index)
+{
+	if (p_index == -1)
+		m_points.push_back(p_position);
+	else
+		m_points.insert(p_index, p_position);
+	m_update_length = true;
 }
 
-void LineMesh::clear_points() {
+void LineMesh::clear_points()
+{
 	m_points.clear();
+	m_update_length = true;
 }
 
-Vector3 LineMesh::get_point_position(int64_t p_index) const {
+Vector3 LineMesh::get_point_position(int64_t p_index) const
+{
 	return m_points[p_index];
 }
 
-PackedVector3Array LineMesh::get_points() const {
+PackedVector3Array LineMesh::get_points() const
+{
 	return m_points;
 }
 
-void LineMesh::remove_point(int64_t p_index) {
+void LineMesh::remove_point(int64_t p_index)
+{
 	m_points.remove_at(p_index);
+	m_update_length = true;
 }
 
-void LineMesh::set_point_position(int64_t p_index, const Vector3 &p_position) {
+void LineMesh::set_point_position(int64_t p_index, const Vector3 &p_position)
+{
 	m_points.set(p_index, p_position);
+	m_update_length = true;
 }
 
-void LineMesh::set_points(const PackedVector3Array &p_points) {
+void LineMesh::set_points(const PackedVector3Array &p_points)
+{
 	m_points = p_points;
+	m_update_length = true;
 }
 
 #pragma endregion
 
 #pragma region m_simplify
 
-bool LineMesh::get_simplify() const {
+bool LineMesh::get_simplify() const
+{
 	return m_simplify;
 }
 
-void LineMesh::set_simplify(bool p_simplify) {
+void LineMesh::set_simplify(bool p_simplify)
+{
 	m_simplify = p_simplify;
+	m_update_length = true;
 }
 
 #pragma endregion
 
 #pragma region m_tolerance
 
-double LineMesh::get_tolerance() const {
+double LineMesh::get_tolerance() const
+{
 	return m_tolerance;
 }
 
-void LineMesh::set_tolerance(double p_tolerance) {
+void LineMesh::set_tolerance(double p_tolerance)
+{
 	m_tolerance = p_tolerance;
+	m_update_length = true;
 }
 
 #pragma endregion
 
 #pragma region m_closed
 
-bool LineMesh::get_closed() const {
+bool LineMesh::get_closed() const
+{
 	return m_closed;
 }
 
-void LineMesh::set_closed(bool p_closed) {
+void LineMesh::set_closed(bool p_closed)
+{
 	m_closed = p_closed;
+	m_update_length = true;
 }
 
 #pragma endregion
 
 #pragma region m_width
 
-double LineMesh::get_width() const {
+double LineMesh::get_width() const
+{
 	return m_width;
 }
 
-void LineMesh::set_width(double p_width) {
+void LineMesh::set_width(double p_width)
+{
 	m_width = p_width;
 }
 
@@ -154,11 +200,13 @@ void LineMesh::set_width(double p_width) {
 
 #pragma region m_width_curve
 
-Ref<Curve> LineMesh::get_width_curve() const {
+Ref<Curve> LineMesh::get_width_curve() const
+{
 	return m_width_curve;
 }
 
-void LineMesh::set_width_curve(const Ref<Curve> &p_width_curve) {
+void LineMesh::set_width_curve(const Ref<Curve> &p_width_curve)
+{
 	m_width_curve = p_width_curve;
 }
 
@@ -166,11 +214,13 @@ void LineMesh::set_width_curve(const Ref<Curve> &p_width_curve) {
 
 #pragma region m_color
 
-Color LineMesh::get_color() const {
+Color LineMesh::get_color() const
+{
 	return m_color;
 }
 
-void LineMesh::set_color(const Color &p_color) {
+void LineMesh::set_color(const Color &p_color)
+{
 	m_color = p_color;
 }
 
@@ -178,11 +228,13 @@ void LineMesh::set_color(const Color &p_color) {
 
 #pragma region m_gradient
 
-Ref<Gradient> LineMesh::get_gradient() const {
+Ref<Gradient> LineMesh::get_gradient() const
+{
 	return m_gradient;
 }
 
-void LineMesh::set_gradient(const Ref<Gradient> &p_gradient) {
+void LineMesh::set_gradient(const Ref<Gradient> &p_gradient)
+{
 	m_gradient = p_gradient;
 }
 
@@ -190,11 +242,13 @@ void LineMesh::set_gradient(const Ref<Gradient> &p_gradient) {
 
 #pragma region m_alignment
 
-LineMesh::LineAlignment LineMesh::get_alignment() const {
+LineMesh::FaceAlignment LineMesh::get_alignment() const
+{
 	return m_alignment;
 }
 
-void LineMesh::set_alignment(LineMesh::LineAlignment p_alignment) {
+void LineMesh::set_alignment(LineMesh::FaceAlignment p_alignment)
+{
 	m_alignment = p_alignment;
 }
 
@@ -202,10 +256,12 @@ void LineMesh::set_alignment(LineMesh::LineAlignment p_alignment) {
 
 #pragma region m_normal
 
-Vector3 LineMesh::get_normal() const {
+Vector3 LineMesh::get_normal() const
+{
 	return m_normal;
 }
-void LineMesh::set_normal(const Vector3 &p_normal) {
+void LineMesh::set_normal(const Vector3 &p_normal)
+{
 	m_normal = p_normal;
 }
 
@@ -213,11 +269,13 @@ void LineMesh::set_normal(const Vector3 &p_normal) {
 
 #pragma region m_use_transform
 
-bool LineMesh::get_use_transform() const {
+bool LineMesh::get_use_transform() const
+{
 	return m_use_transform;
 }
 
-void LineMesh::set_use_transform(bool p_use_transform) {
+void LineMesh::set_use_transform(bool p_use_transform)
+{
 	m_use_transform = p_use_transform;
 }
 
@@ -225,56 +283,152 @@ void LineMesh::set_use_transform(bool p_use_transform) {
 
 #pragma region m_transform
 
-Transform3D LineMesh::get_transform() const {
+Transform3D LineMesh::get_transform() const
+{
 	return m_transform;
 }
 
-void LineMesh::set_transform(const Transform3D &p_transform) {
+void LineMesh::set_transform(const Transform3D &p_transform)
+{
 	m_transform = p_transform;
 	m_inverse_transform = m_transform.inverse();
 }
 
 #pragma endregion
 
+#pragma region m_draw_caps
+
+bool LineMesh::get_draw_caps() const
+{
+	return m_draw_caps;
+}
+
+void LineMesh::set_draw_caps(bool p_draw_caps)
+{
+	m_draw_caps = p_draw_caps;
+}
+
+#pragma endregion
+
+#pragma region m_cap_smooth
+
+int LineMesh::get_cap_smooth() const
+{
+	return m_cap_smooth;
+}
+
+void LineMesh::set_cap_smooth(int p_cap_smooth)
+{
+	m_cap_smooth = p_cap_smooth;
+}
+
+#pragma endregion
+
+#pragma region m_draw_corners
+
+bool LineMesh::get_draw_corners() const
+{
+	return m_draw_corners;
+}
+
+void LineMesh::set_draw_corners(bool p_draw_corners)
+{
+	m_draw_corners = p_draw_corners;
+}
+
+#pragma endregion
+
+#pragma region m_corner_smooth
+
+int LineMesh::get_corner_smooth() const
+{
+	return m_corner_smooth;
+}
+
+void LineMesh::set_corner_smooth(int p_corner_smooth)
+{
+	m_corner_smooth = p_corner_smooth;
+}
+
+#pragma endregion
+
+#pragma region m_length
+
+double LineMesh::get_length()
+{
+	if (m_update_length)
+	{
+		update_length();
+	}
+	return m_length;
+}
+
+void LineMesh::update_length()
+{
+	m_update_length = false;
+	m_length = 0.0;
+	PackedVector3Array points = _get_simplified_points();
+	int64_t num_points = points.size();
+	if (num_points < 2 || (m_closed && num_points < 3))
+		return;
+
+	for (int64_t i = 0; i < (m_closed ? num_points : num_points - 1); i++)
+	{
+		Vector3 current_point = points[i];
+		Vector3 next_point = points[(i + 1) % num_points];
+		m_length += current_point.distance_to(next_point);
+	}
+}
+
+#pragma endregion
+
 #pragma region helper_methods
 
-PackedVector3Array LineMesh::_douglas_peucker(const PackedVector3Array &p_points, double p_epsilon) const {
+PackedVector3Array LineMesh::_douglas_peucker(const PackedVector3Array &p_points, double p_epsilon) const
+{
 	int64_t num_points = p_points.size();
 	// Require at least 2 points to simplify.
-	if (num_points < 2) return p_points;
-	
+	if (num_points < 2)
+		return p_points;
+
 	Vector3 start_point = p_points[0];
 	Vector3 end_point = p_points[num_points - 1];
 	Vector3 start_to_end = end_point - start_point;
 	double distance = start_to_end.length();
 	// Require some distance between start_point and end_point.
-	if(Math::is_zero_approx(distance)) return {start_point};
+	if (Math::is_zero_approx(distance))
+		return {start_point};
 
 	// Find the point with the maximum perpendicular distance.
 	double dmax = 0;
 	int64_t index = 0;
 	// Loop points between start and end of array.
-	for (int64_t i = 1; i < num_points - 1; i++) {
+	for (int64_t i = 1; i < num_points - 1; i++)
+	{
 		Vector3 current_point = p_points[i];
 		// Get perpendicular distance between current_point and the line defined from start_point to end_point.
 		Vector3 start_to_current = current_point - start_point;
 		double perpendicular_distance = start_to_current.cross(start_to_end).length() / distance;
-		if (perpendicular_distance > dmax) {
-				index = i;
-				dmax = perpendicular_distance;
+		if (perpendicular_distance > dmax)
+		{
+			index = i;
+			dmax = perpendicular_distance;
 		}
 	}
 
 	PackedVector3Array simplified_points;
 	// If max distance is greater than epsilon, recursively simplify.
-	if (dmax > p_epsilon) {
+	if (dmax > p_epsilon)
+	{
 		// Recursively simplify line segments before and after the index point.
 		PackedVector3Array rec_results_1 = _douglas_peucker(p_points.slice(0, index + 1), p_epsilon);
 		PackedVector3Array rec_results_2 = _douglas_peucker(p_points.slice(index), p_epsilon);
 		// Combine recursive results, deduplicating the index point.
 		simplified_points = rec_results_1.slice(0, -1);
 		simplified_points.append_array(rec_results_2);
-	} else {
+	}
+	else
+	{
 		// Remove points between start and end of array.
 		simplified_points = {start_point, end_point};
 	}
@@ -283,45 +437,47 @@ PackedVector3Array LineMesh::_douglas_peucker(const PackedVector3Array &p_points
 	return simplified_points;
 }
 
-Vector3 LineMesh::_get_position_alignment(const Vector3 &p_position) const {
-	return m_alignment == ALIGN_TO_NORMAL ?
-		_transform_direction(m_normal).normalized() :
-		p_position.direction_to(_transform_position(m_normal));
+Vector3 LineMesh::_get_position_alignment(const Vector3 &p_position) const
+{
+	return m_alignment == ALIGN_TO_NORMAL ? _transform_direction(m_normal).normalized() : p_position.direction_to(_transform_position(m_normal));
 }
 
-PackedVector3Array LineMesh::_get_simplified_points() const {
+PackedVector3Array LineMesh::_get_simplified_points() const
+{
 	// Only perform simplification if tolerance is greater than 0.
-	if (!m_simplify || m_tolerance <= 0) return m_points;
+	if (!m_simplify || m_tolerance <= 0)
+		return m_points;
 	return _douglas_peucker(m_points, m_tolerance);
 }
 
-Vector3 LineMesh::_transform_direction(const Vector3 &p_local_direction) const {
-	return m_use_transform ?
-		m_inverse_transform.basis.xform(p_local_direction) :
-		p_local_direction;
+Vector3 LineMesh::_transform_direction(const Vector3 &p_local_direction) const
+{
+	return m_use_transform ? m_inverse_transform.basis.xform(p_local_direction) : p_local_direction;
 }
 
-Vector3 LineMesh::_transform_position(const Vector3 &p_local_position) const {
-	return m_use_transform ?
-		m_inverse_transform.xform(p_local_position) :
-		p_local_position;
+Vector3 LineMesh::_transform_position(const Vector3 &p_local_position) const
+{
+	return m_use_transform ? m_inverse_transform.xform(p_local_position) : p_local_position;
 }
 
 #pragma endregion
 
-void LineMesh::redraw() {
+void LineMesh::redraw()
+{
 	// Clear mesh.
 	clear_surfaces();
 
 	// Require line width.
-	if(m_width <= 0.0) return;
+	if (m_width <= 0.0)
+		return;
 
 	// Get simplified points.
 	PackedVector3Array points = _get_simplified_points();
 
 	// Require 2 or more points (3 or more if line is closed).
 	int64_t num_points = points.size();
-	if(num_points < 2 || (m_closed && num_points < 3)) return;
+	if (num_points < 2 || (m_closed && num_points < 3))
+		return;
 
 	// Begin draw.
 	surface_begin(PRIMITIVE_TRIANGLE_STRIP);
@@ -329,15 +485,16 @@ void LineMesh::redraw() {
 	// Get number of segments
 	int64_t num_segments = m_closed ? num_points : num_points - 1;
 
+	// Get current line length and track current length along line.
+	double total_length = get_length();
+	double current_length = 0.0;
+
 	// Draw segments
-	for (int64_t i = 0; i <= num_segments; i++) {
+	for (int64_t i = 0; i <= num_segments; i++)
+	{
 		Vector3 current_point = _transform_position(points[i % num_points]);
-		Vector3 next_point = m_closed || i < num_points - 1 ?
-			_transform_position(points[(i + 1) % num_points]) :
-			current_point;
-		Vector3 previous_point = m_closed || i != 0 ?
-			_transform_position(points[(num_points + i - 1) % num_points]) :
-			current_point;
+		Vector3 next_point = m_closed || i < num_points - 1 ? _transform_position(points[(i + 1) % num_points]) : current_point;
+		Vector3 previous_point = m_closed || i != 0 ? _transform_position(points[(num_points + i - 1) % num_points]) : current_point;
 
 		Vector3 alignment = _get_position_alignment(current_point);
 
@@ -353,17 +510,24 @@ void LineMesh::redraw() {
 		Vector3 bitangent = alignment.cross(tangent).normalized();
 		Vector3 normal = dir_avg.cross(bitangent).normalized();
 
-		bitangent *= m_width / 2.0 + m_width / 10.0 * (tangent_angle * tangent_angle);
+		// Get width at current point along line.
+		double width = m_width_curve.is_valid() ? m_width * m_width_curve->sample_baked(current_length / total_length) : m_width;
+		bitangent *= width / 2.0;
+
+		// Get color at current point along line.
+		Color color = m_gradient.is_valid() ? m_color * m_gradient->sample(current_length / total_length) : m_color;
 
 		surface_set_normal(normal);
 		surface_set_uv(Vector2(0, 1));
-		surface_set_color(m_color);
+		surface_set_color(color);
 		surface_add_vertex(current_point - bitangent);
 
 		surface_set_normal(normal);
 		surface_set_uv(Vector2(1, 1));
-		surface_set_color(m_color);
+		surface_set_color(color);
 		surface_add_vertex(current_point + bitangent);
+
+		current_length += current_point.distance_to(next_point);
 	}
 
 	// End drawing.

@@ -2,7 +2,7 @@
 
 A 3D line renderer for Godot built using GDExtension.
 
-Targets Godot version 4.3.
+Targets Godot version 4.5.
 
 ## Features
 
@@ -31,6 +31,19 @@ git submodule update --init
 # (replacing <platform> with windows, linux or macos depending on your target platform)
 scons platform=<platform>
 ```
+
+## Build Docs
+
+Navigate to the demo folder after builing the library. `cd ./line3d-demo`
+
+Run the command bellow to generate the xml files in `/doc_clases` folder.
+
+```bash
+# If godot is not part of you PATH then use the path to the godot executable instead
+godot --doctool ../ --gdextension-docs
+```
+
+Edit the generated doc files in `/doc_classes`.
 
 ## Installation
 

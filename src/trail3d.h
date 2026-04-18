@@ -1,5 +1,7 @@
-#ifndef LINE3D_H
-#define LINE3D_H
+#ifndef TRAIL3D_H
+#define TRAIL3D_H
+
+#include <deque>
 
 #include <godot_cpp/classes/geometry_instance3d.hpp>
 
@@ -8,12 +10,12 @@
 namespace godot
 {
 
-	class Line3D : public GeometryInstance3D
+	class Trail3D : public GeometryInstance3D
 	{
-		GDCLASS(Line3D, GeometryInstance3D)
+		GDCLASS(Trail3D, GeometryInstance3D)
 
 	public:
-		enum LineAlignment
+		enum TrailAlignment
 		{
 			ALIGN_TO_VIEW,
 			FACE_TOWARD_POSITION,
@@ -22,7 +24,14 @@ namespace godot
 
 	private:
 		Ref<LineMesh> m_mesh;
-		Line3D::LineAlignment m_alignment = ALIGN_TO_NORMAL;
+		TrailAlignment m_alignment = ALIGN_TO_NORMAL;
+		uint64_t m_lifetime = 1000;
+		double m_min_vertex_distance = 0.3;
+		bool m_emmitting = true;
+		std::deque<uint64_t> m_spawn_times;
+		Vector3 m_previous_position = Vector3(0, 0, 0);
+		Vector3 m_last_emmited_position = Vector3(0, 0, 0);
+		bool m_leading_point = false;
 
 	protected:
 		static void _bind_methods();
@@ -31,29 +40,20 @@ namespace godot
 		bool _is_dirty = false;
 
 	public:
-		Line3D();
-		~Line3D();
+		Trail3D();
+		~Trail3D();
 
 		void _process(double delta) override {};
 
 		void set_dirty();
 
-		void add_point(const Vector3 &p_position, int64_t p_index = -1);
-		void clear_points();
-		Vector3 get_point_position(int64_t p_index) const;
-		PackedVector3Array get_points() const;
-		void remove_point(int64_t p_index);
-		void set_point_position(int64_t p_index, const Vector3 &p_position);
-		void set_points(const PackedVector3Array &p_points);
+		void clear_trail();
 
 		bool get_simplify() const;
 		void set_simplify(bool p_simplify);
 
 		double get_tolerance() const;
 		void set_tolerance(double p_tolerance);
-
-		bool get_closed() const;
-		void set_closed(bool p_closed);
 
 		double get_width() const;
 		void set_width(double p_width);
@@ -67,17 +67,20 @@ namespace godot
 		Ref<Gradient> get_gradient() const;
 		void set_gradient(const Ref<Gradient> &p_gradient);
 
-		Line3D::LineAlignment get_alignment() const;
-		void set_alignment(Line3D::LineAlignment p_alignment);
+		TrailAlignment get_alignment() const;
+		void set_alignment(TrailAlignment p_alignment);
 
 		Vector3 get_normal() const;
 		void set_normal(const Vector3 &p_normal);
 
-		bool get_use_global_space() const;
-		void set_use_global_space(bool p_use_global_space);
+		uint64_t get_lifetime() const;
+		void set_lifetime(uint64_t p_lifetime);
 
-		Transform3D get_mesh_transform() const;
-		void set_mesh_transform(const Transform3D &p_transform);
+		double get_min_vertex_distance() const;
+		void set_min_vertex_distance(double p_min_vertex_distance);
+
+		bool get_emitting() const;
+		void set_emitting(bool p_emitting);
 
 		bool get_draw_caps() const;
 		void set_draw_caps(bool p_draw_caps);
@@ -96,6 +99,6 @@ namespace godot
 
 } // namespace godot
 
-VARIANT_ENUM_CAST(Line3D::LineAlignment);
+VARIANT_ENUM_CAST(Trail3D::TrailAlignment);
 
-#endif // LINE3D_H
+#endif // TRAIL3D_H

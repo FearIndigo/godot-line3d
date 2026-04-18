@@ -44,6 +44,13 @@
 				Returns the position of the point at the specified index.
 			</description>
 		</method>
+		<method name="redraw">
+			<return type="void" />
+			<description>
+				Rebuilds the mesh. Call this method after making changes to the line to update its appearance.
+				 Note: You typically do not need to call this method directly, as the Line3D node will handle updating the mesh automatically each frame.
+			</description>
+		</method>
 		<method name="remove_point">
 			<return type="void" />
 			<param index="0" name="index" type="int" />

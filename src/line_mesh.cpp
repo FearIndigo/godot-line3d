@@ -6,6 +6,7 @@ using namespace godot;
 
 void LineMesh::_bind_methods()
 {
+	// FaceAlignment
 	BIND_ENUM_CONSTANT(FACE_TOWARD_POSITION);
 	BIND_ENUM_CONSTANT(ALIGN_TO_NORMAL);
 

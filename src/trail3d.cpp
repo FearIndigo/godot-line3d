@@ -9,6 +9,7 @@ using namespace godot;
 
 void Trail3D::_bind_methods()
 {
+	// TrailAlignment
 	BIND_ENUM_CONSTANT(ALIGN_TO_VIEW);
 	BIND_ENUM_CONSTANT(FACE_TOWARD_POSITION);
 	BIND_ENUM_CONSTANT(ALIGN_TO_NORMAL);
@@ -76,6 +77,10 @@ void Trail3D::_bind_methods()
 	ADD_PROPERTY(PropertyInfo(Variant::INT, "corner_smooth"), "set_corner_smooth", "get_corner_smooth");
 
 	ClassDB::bind_method(D_METHOD("get_length"), &Trail3D::get_length);
+
+	ClassDB::bind_method(D_METHOD("redraw"), &Trail3D::redraw);
+
+	ClassDB::bind_method(D_METHOD("set_dirty"), &Trail3D::set_dirty);
 }
 
 Trail3D::Trail3D()
@@ -341,6 +346,12 @@ double Trail3D::get_length()
 
 #pragma endregion
 
+void Trail3D::redraw()
+{
+	m_mesh->redraw();
+	_is_dirty = false;
+}
+
 void Trail3D::_notification(int p_what)
 {
 	if (p_what == NOTIFICATION_PROCESS)
@@ -455,8 +466,7 @@ void Trail3D::_notification(int p_what)
 		// Redraw mesh.
 		if (_is_dirty)
 		{
-			m_mesh->redraw();
-			_is_dirty = false;
+			redraw();
 		}
 	}
 }

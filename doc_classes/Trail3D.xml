@@ -23,6 +23,13 @@
 				Returns the total length of the trail. If properties affecting trail length have been modified, the length is recalculated.
 			</description>
 		</method>
+		<method name="redraw">
+			<return type="void" />
+			<description>
+				Rebuilds the mesh. Call this method after making changes to the line to update its appearance.
+				 Note: You typically do not need to call this method directly, as the Trail3D node will handle updating the mesh automatically each frame.
+			</description>
+		</method>
 		<method name="set_dirty">
 			<return type="void" />
 			<description>

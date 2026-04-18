@@ -55,9 +55,8 @@
 		<method name="redraw">
 			<return type="void" />
 			<description>
-				Rebuilds the mesh. Call this method after making multiple changes to the line to update its appearance.
-
-				 Note: When using a Line3D node, you typically do not need to call this method directly, as the Line3D node will handle updating the mesh automatically.
+				Rebuilds the mesh. Call this method after making changes to the line to update its appearance.
+				 Note: When using a Line3D or Trail3D node, you typically do not need to call this method directly, as the node will handle updating the mesh automatically each frame.
 			</description>
 		</method>
 		<method name="remove_point">

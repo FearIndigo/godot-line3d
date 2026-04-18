@@ -8,11 +8,10 @@ using namespace godot;
 
 void Line3D::_bind_methods()
 {
+	// LineAlignment
 	BIND_ENUM_CONSTANT(ALIGN_TO_VIEW);
 	BIND_ENUM_CONSTANT(FACE_TOWARD_POSITION);
 	BIND_ENUM_CONSTANT(ALIGN_TO_NORMAL);
-
-	ClassDB::bind_method(D_METHOD("set_dirty"), &Line3D::set_dirty);
 
 	ClassDB::bind_method(D_METHOD("add_point", "position", "index"), &Line3D::add_point, DEFVAL(-1));
 	ClassDB::bind_method(D_METHOD("clear_points"), &Line3D::clear_points);
@@ -80,6 +79,10 @@ void Line3D::_bind_methods()
 	ADD_PROPERTY(PropertyInfo(Variant::INT, "corner_smooth"), "set_corner_smooth", "get_corner_smooth");
 
 	ClassDB::bind_method(D_METHOD("get_length"), &Line3D::get_length);
+
+	ClassDB::bind_method(D_METHOD("redraw"), &Line3D::redraw);
+
+	ClassDB::bind_method(D_METHOD("set_dirty"), &Line3D::set_dirty);
 }
 
 Line3D::Line3D()
@@ -389,6 +392,12 @@ double Line3D::get_length()
 
 #pragma endregion
 
+void Line3D::redraw()
+{
+	m_mesh->redraw();
+	_is_dirty = false;
+}
+
 void Line3D::_notification(int p_what)
 {
 	if (p_what == NOTIFICATION_PROCESS)
@@ -421,8 +430,7 @@ void Line3D::_notification(int p_what)
 		// Redraw mesh.
 		if (_is_dirty)
 		{
-			m_mesh->redraw();
-			_is_dirty = false;
+			redraw();
 		}
 	}
 }

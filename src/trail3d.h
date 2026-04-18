@@ -45,6 +45,8 @@ namespace godot
 
 		void _process(double delta) override {};
 
+		void redraw();
+
 		void set_dirty();
 
 		void clear_trail();

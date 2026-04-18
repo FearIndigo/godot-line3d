@@ -36,6 +36,8 @@ namespace godot
 
 		void _process(double delta) override {};
 
+		void redraw();
+
 		void set_dirty();
 
 		void add_point(const Vector3 &p_position, int64_t p_index = -1);

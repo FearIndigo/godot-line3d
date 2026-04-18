@@ -35,7 +35,8 @@ _data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
 point_count = 2
 
 [sub_resource type="Gradient" id="Gradient_lquwl"]
-colors = PackedColorArray(1, 0, 0, 1, 1, 0.49803922, 0, 1)
+offsets = PackedFloat32Array(0, 0.122507125, 1)
+colors = PackedColorArray(0.20017129, 0.51187944, 1, 1, 0.99176925, 0, 0.24200988, 1, 0.9722268, 0.52256465, 0, 1)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_lquwl"]
 shading_mode = 0

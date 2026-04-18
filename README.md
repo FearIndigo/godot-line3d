@@ -6,7 +6,7 @@ Targets Godot version 4.5.
 
 ## Features
 
-- **LineMesh:** A new mesh resource which is used by Line3D under the hood.
+- **LineMesh:** A new mesh resource used to draw a 3D line mesh.
 - **Line3D:** A new node to render a line in 3D space.
 - **Trail3D:** A new node to render a trail in 3D space.
 

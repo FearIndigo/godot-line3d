@@ -14,7 +14,9 @@ void Trail3D::_bind_methods()
 	BIND_ENUM_CONSTANT(FACE_TOWARD_POSITION);
 	BIND_ENUM_CONSTANT(ALIGN_TO_NORMAL);
 
-	ClassDB::bind_method(D_METHOD("set_dirty"), &Trail3D::set_dirty);
+	// TrailMode
+	BIND_ENUM_CONSTANT(LIFETIME);
+	BIND_ENUM_CONSTANT(MAX_LENGTH);
 
 	ClassDB::bind_method(D_METHOD("set_simplify", "simplify"), &Trail3D::set_simplify);
 	ClassDB::bind_method(D_METHOD("get_simplify"), &Trail3D::get_simplify);
@@ -44,6 +46,10 @@ void Trail3D::_bind_methods()
 	ClassDB::bind_method(D_METHOD("get_alignment"), &Trail3D::get_alignment);
 	ADD_PROPERTY(PropertyInfo(Variant::INT, "alignment", PROPERTY_HINT_ENUM, "Align To View,Face Toward Position,Align To Normal"), "set_alignment", "get_alignment");
 
+	ClassDB::bind_method(D_METHOD("set_remove_mode", "mode"), &Trail3D::get_remove_mode);
+	ClassDB::bind_method(D_METHOD("get_remove_mode"), &Trail3D::get_remove_mode);
+	ADD_PROPERTY(PropertyInfo(Variant::INT, "remove_mode", PROPERTY_HINT_ENUM, "Lifetime,Max Length"), "set_remove_mode", "get_remove_mode");
+
 	ClassDB::bind_method(D_METHOD("set_normal", "normal"), &Trail3D::set_normal);
 	ClassDB::bind_method(D_METHOD("get_normal"), &Trail3D::get_normal);
 	ADD_PROPERTY(PropertyInfo(Variant::VECTOR3, "normal"), "set_normal", "get_normal");
@@ -51,6 +57,10 @@ void Trail3D::_bind_methods()
 	ClassDB::bind_method(D_METHOD("set_lifetime", "lifetime"), &Trail3D::set_lifetime);
 	ClassDB::bind_method(D_METHOD("get_lifetime"), &Trail3D::get_lifetime);
 	ADD_PROPERTY(PropertyInfo(Variant::INT, "lifetime", PROPERTY_HINT_RANGE, "0,10000,,or_greater"), "set_lifetime", "get_lifetime");
+
+	ClassDB::bind_method(D_METHOD("set_max_length", "max_length"), &Trail3D::set_max_length);
+	ClassDB::bind_method(D_METHOD("get_max_length"), &Trail3D::get_max_length);
+	ADD_PROPERTY(PropertyInfo(Variant::INT, "max_length", PROPERTY_HINT_RANGE, "0,10000,,or_greater"), "set_max_length", "get_max_length");
 
 	ClassDB::bind_method(D_METHOD("set_min_vertex_distance", "min_vertex_distance"), &Trail3D::set_min_vertex_distance);
 	ClassDB::bind_method(D_METHOD("get_min_vertex_distance"), &Trail3D::get_min_vertex_distance);
@@ -219,6 +229,33 @@ void Trail3D::set_alignment(Trail3D::TrailAlignment p_alignment)
 
 #pragma endregion
 
+#pragma region m_mode
+
+Trail3D::TrailRemoveMode Trail3D::get_remove_mode() const
+{
+	return m_remove_mode;
+}
+
+void Trail3D::set_remove_mode(Trail3D::TrailRemoveMode p_remove_mode)
+{
+	if (m_remove_mode == p_remove_mode)
+	{
+		return;
+	}
+
+	m_remove_mode = p_remove_mode;
+	switch (m_remove_mode)
+	{
+	case LIFETIME:
+		break;
+	case MAX_LENGTH:
+		break;
+	}
+	_is_dirty = true;
+}
+
+#pragma endregion
+
 #pragma region m_normal
 
 Vector3 Trail3D::get_normal() const
@@ -243,6 +280,22 @@ uint64_t Trail3D::get_lifetime() const
 void Trail3D::set_lifetime(uint64_t p_lifetime)
 {
 	m_lifetime = p_lifetime;
+	_is_dirty = true;
+}
+
+#pragma endregion
+
+#pragma region m_max_length
+
+double Trail3D::get_max_length() const
+{
+	return m_max_length;
+}
+
+void Trail3D::set_max_length(double p_max_length)
+{
+	m_max_length = p_max_length;
+	_is_dirty = true;
 }
 
 #pragma endregion
@@ -352,6 +405,121 @@ void Trail3D::redraw()
 	_is_dirty = false;
 }
 
+void Trail3D::_update_leading_point()
+{
+	if (!m_emmitting)
+	{
+		return;
+	}
+
+	Vector3 current_position = m_mesh->get_transform().origin;
+	if (current_position.is_equal_approx(m_previous_position))
+	{
+		return;
+	}
+
+	uint64_t time = Time::get_singleton()->get_ticks_msec();
+	if (m_spawn_times.empty() || m_last_emmited_position.distance_to(current_position) >= m_min_vertex_distance)
+	{
+		// No points or far enough from last point. Emit new point.
+		if (m_leading_point)
+		{
+			// Use leading point as new point.
+			m_leading_point = false;
+			m_mesh->set_point_position(0, current_position);
+			m_spawn_times.front() = time;
+		}
+		else
+		{
+			// Emit new point.
+			m_mesh->add_point(current_position, 0);
+			m_spawn_times.push_front(time);
+		}
+		m_last_emmited_position = current_position;
+		_is_dirty = true;
+	}
+	else
+	{
+		// Not far enough from last spawned point. Update leading point position.
+		if (m_leading_point)
+		{
+			// Update leading point.
+			m_mesh->set_point_position(0, current_position);
+			m_spawn_times.front() = time;
+		}
+		else
+		{
+			// Emit new leading point.
+			m_leading_point = true;
+			m_mesh->add_point(current_position, 0);
+			m_spawn_times.push_front(time);
+		}
+		_is_dirty = true;
+	}
+
+	m_previous_position = current_position;
+}
+
+void Trail3D::_remove_expired_points()
+{
+	bool lerp_last_point = false;
+	double lerp = 0.0;
+	switch (m_remove_mode)
+	{
+	case LIFETIME:
+		// Delete points after thier lifetime expires.
+		uint64_t time = Time::get_singleton()->get_ticks_msec();
+		int64_t num_points = m_mesh->get_points().size();
+		while (!m_spawn_times.empty())
+		{
+			uint64_t current_expire_time = m_spawn_times.back() + m_lifetime;
+			if (current_expire_time < time)
+			{
+				uint64_t next_expire_time = m_spawn_times.size() > 1 ? m_spawn_times[1] + m_lifetime : 0;
+				if (next_expire_time > time)
+				{
+					// Lerp trailing point to next point.
+					uint32_t diff = next_expire_time - current_expire_time;
+					float t = 1.0 - float(next_expire_time - time) / diff;
+					m_spawn_times.front() += diff * t;
+					Vector3 lerp_pos = m_mesh->get_point_position(num_points - 1).lerp(m_mesh->get_point_position(num_points - 2), t);
+					m_mesh->set_point_position(num_points - 1, lerp_pos);
+					_is_dirty = true;
+					// Next point not old enough to remove.
+					break;
+				}
+				else
+				{
+					// Remove trailing point.
+					m_spawn_times.pop_front();
+					m_mesh->remove_point(num_points - 1);
+					_is_dirty = true;
+					if (m_leading_point && num_points == 1)
+					{
+						// Leading point was removed.
+						m_leading_point = false;
+					}
+				}
+			}
+			else
+			{
+				// Last point not old enough to remove.
+				break;
+			}
+		}
+		break;
+
+	case MAX_LENGTH:
+		// Trim trail to maximum length.
+		break;
+	}
+
+	if (lerp_last_point)
+	{
+		// Lerp last point along distance to next point.
+	}
+}
+
 void Trail3D::_notification(int p_what)
 {
 	if (p_what == NOTIFICATION_PROCESS)
@@ -380,88 +548,11 @@ void Trail3D::_notification(int p_what)
 
 		uint64_t time = Time::get_singleton()->get_ticks_msec();
 
-		// Emit new points when moving.
-		Vector3 current_position = m_mesh->get_transform().origin;
-		if (m_emmitting && current_position.is_equal_approx(m_previous_position) == false)
-		{
-			if (m_spawn_times.empty() || m_last_emmited_position.distance_to(current_position) >= m_min_vertex_distance)
-			{
-				// No points or far enough from last point.
-				if (m_leading_point)
-				{
-					// Use leading point as new point.
-					m_leading_point = false;
-					m_mesh->set_point_position(0, current_position);
-					m_spawn_times.back() = time;
-				}
-				else
-				{
-					// Add new point.
-					m_mesh->add_point(current_position, 0);
-					m_spawn_times.push_back(time);
-				}
-				m_last_emmited_position = current_position;
-				_is_dirty = true;
-			}
-			else
-			{
-				// Not far enough from last spawned point, update leading point position.
-				if (m_leading_point)
-				{
-					// Update leading point.
-					m_mesh->set_point_position(0, current_position);
-					m_spawn_times.back() = time;
-				}
-				else
-				{
-					// Add leading point.
-					m_leading_point = true;
-					m_mesh->add_point(current_position, 0);
-					m_spawn_times.push_back(time);
-				}
-				_is_dirty = true;
-			}
-			m_previous_position = current_position;
-		}
+		// Add new point or update leading point.
+		_update_leading_point();
 
 		// Remove old points and update trailing point.
-		while (!m_spawn_times.empty())
-		{
-			uint64_t current_expire_time = m_spawn_times[0] + m_lifetime;
-			if (current_expire_time < time)
-			{
-				int64_t num_points = m_mesh->get_points().size();
-				uint64_t next_expire_time = m_spawn_times.size() > 1 ? m_spawn_times[1] + m_lifetime : 0;
-				if (next_expire_time > time)
-				{
-					// Lerp trailing point to next point.
-					uint32_t diff = next_expire_time - current_expire_time;
-					float t = 1.0 - float(next_expire_time - time) / diff;
-					m_spawn_times[0] += diff * t;
-					m_mesh->set_point_position(num_points - 1, m_mesh->get_point_position(num_points - 1).lerp(m_mesh->get_point_position(num_points - 2), t));
-					_is_dirty = true;
-					// Next point not old enough to remove.
-					break;
-				}
-				else
-				{
-					// Remove trailing point.
-					m_spawn_times.pop_front();
-					m_mesh->remove_point(num_points - 1);
-					_is_dirty = true;
-					if (m_leading_point && num_points == 1)
-					{
-						// Leading point was removed.
-						m_leading_point = false;
-					}
-				}
-			}
-			else
-			{
-				// Last point not old enough to remove.
-				break;
-			}
-		}
+		_remove_expired_points();
 
 		// Redraw mesh.
 		if (_is_dirty)

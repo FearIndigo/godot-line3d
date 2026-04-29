@@ -22,10 +22,25 @@ namespace godot
 			ALIGN_TO_NORMAL,
 		};
 
+		enum TrailRemoveMode
+		{
+			LIFETIME,
+			MAX_LENGTH,
+		};
+
+		enum TrailRemoveType
+		{
+			DONT_REMOVE,
+			REMOVE,
+			REMOVE_COUNT,
+		};
+
 	private:
 		Ref<LineMesh> m_mesh;
 		TrailAlignment m_alignment = ALIGN_TO_NORMAL;
+		TrailRemoveMode m_remove_mode = LIFETIME;
 		uint64_t m_lifetime = 1000;
+		double m_max_length = 1;
 		double m_min_vertex_distance = 0.3;
 		bool m_emmitting = true;
 		std::deque<uint64_t> m_spawn_times;
@@ -36,6 +51,8 @@ namespace godot
 	protected:
 		static void _bind_methods();
 		void _notification(int p_what);
+		void _update_leading_point();
+		void _remove_expired_points();
 
 		bool _is_dirty = false;
 
@@ -72,11 +89,17 @@ namespace godot
 		TrailAlignment get_alignment() const;
 		void set_alignment(TrailAlignment p_alignment);
 
+		TrailRemoveMode get_remove_mode() const;
+		void set_remove_mode(TrailRemoveMode p_remove_mode);
+
 		Vector3 get_normal() const;
 		void set_normal(const Vector3 &p_normal);
 
 		uint64_t get_lifetime() const;
 		void set_lifetime(uint64_t p_lifetime);
+
+		double get_max_length() const;
+		void set_max_length(double p_max_length);
 
 		double get_min_vertex_distance() const;
 		void set_min_vertex_distance(double p_min_vertex_distance);
@@ -102,5 +125,6 @@ namespace godot
 } // namespace godot
 
 VARIANT_ENUM_CAST(Trail3D::TrailAlignment);
+VARIANT_ENUM_CAST(Trail3D::TrailRemoveMode);
 
 #endif // TRAIL3D_H

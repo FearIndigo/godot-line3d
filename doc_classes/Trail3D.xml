@@ -95,5 +95,11 @@
 		<constant name="ALIGN_TO_NORMAL" value="2" enum="TrailAlignment">
 			Aligns the trail according to a specified normal vector.
 		</constant>
+		<constant name="LIFETIME" value="0" enum="TrailMode">
+			Points are removed from the trail once the point's lifetime has expired.
+		</constant>
+		<constant name="MAX_LENGTH" value="1" enum="TrailMode">
+			Points are removed from the trail once the length exceeds a maximum allowed value.
+		</constant>
 	</constants>
 </class>
